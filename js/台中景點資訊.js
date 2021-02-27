@@ -12,8 +12,6 @@ new Vue({
    methods: {
       listA(e){
          this.nowarea =e.target.value
-
-         
      }
    },
    mounted () {
