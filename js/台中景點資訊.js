@@ -1,4 +1,5 @@
 
+
 new Vue({
    el:"#app",
    data () {
@@ -17,7 +18,7 @@ new Vue({
    },
    mounted () {
     axios
-    .get('https://jiajia0123.github.io/mywork/%E4%BD%9C%E5%93%81/api.json')
+    .get('https://jiajia0123.github.io/%E4%BD%9C%E5%93%81/api.json')
     .then(response => (this.info = response.data))
     .catch(function (error) { // 请求失败处理
       console.log(error);
@@ -25,7 +26,7 @@ new Vue({
     
     
     axios
-    .get('https://jiajia0123.github.io/mywork/%E4%BD%9C%E5%93%81/api2.json')
+    .get('https://jiajia0123.github.io/%E4%BD%9C%E5%93%81/api2.json')
     .then(response2 => (this.infop = response2.data[10].districts))
     .catch(function (error) { // 请求失败处理
       console.log(error);
