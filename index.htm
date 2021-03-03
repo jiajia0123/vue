@@ -77,7 +77,7 @@ html,body{
     <div id="app">
         <div class="banner">
             <h1 class="h1">台中景點資訊-Vue</h1>
-            <select name="" id="sel" @change="listA">
+            <select name="" id="sel" v-model="nowarea">
                 <option :value="site.name" v-for="site in infop">  {{site.name}} </option>
             </select>
             

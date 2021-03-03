@@ -6,14 +6,9 @@ new Vue({
       return {
         info: null,
         infop: null,
-        nowarea:"東區"
+        nowarea:"西屯區"
       }
     },
-   methods: {
-      listA(e){
-         this.nowarea =e.target.value
-     }
-   },
    mounted () {
     axios
     .get('https://jiajia0123.github.io/mywork/api.json')
