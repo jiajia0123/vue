@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue實作</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src=" https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+   
+</head>
+
+
+
+<body style="padding: 10px;">
+    以下皆100%自己寫
+    <br>
+    ----------------------------------------
+<style>
+    input{
+        margin: 4px 0;
+    }
+    li{
+        margin: 4px 0;
+    }
+</style>
+    <div>
+    <h1 style="margin: 0em;font-size: 25px;">實作1：待辦清單實作</h1>
+<strong style="margin: 5px 0;display: block;">運用技術：Vue框架應用、localStorage、JSON.stringify、JSON.parse、[].splice、 mounted ()</strong>
+<span style="margin: 5px 0;display: block;font-size: 15px;">PS:關掉網頁或重整內容還會在</span>
+<div id="todo" style="min-height: 300px;border: solid 1px #999;padding: 10px;display: inline-block;margin: 10px 0px;">
+
+<div>
+    <input type="text" v-model="list"> 
+ 
+    <button @click="add">Add</button>
+    <button @click="removeall">remove</button>
+</div>
+<ul>
+    <li  v-for="(item,idx) in arr">{{item}}<button @click="remove(idx)">X</button> </li>
+</ul>
+
+</div>
+</div>
+
+<br>
+    <div id="app17">
+        <h1 style="margin: 0em;font-size: 25px;">實作2：會員登入</h1>
+        <strong style="margin: 5px 0;display: block;font-size: 17px;">運用技術：Vue框架應用、組件component、api使用、axios.post()應用、loading時輸入框變成disabled、登入成功v-esle出現使用者姓名</strong>
+        <span style="margin: 5px 0;display: block;font-size: 15px;">測試帳號:scars 密碼:1234567</span>
+        <div  style="min-height: 200px;border: solid 1px #999;padding: 10px;display: inline-block;margin: 10px 0px;">
+      
+       
+        <login-form></login-form>
+    </div>
+       <br>
+       <br>
+       <h1 style="margin: 0em;font-size: 25px;">實作3：驗證帳號是否被使用過</h1>
+       <strong style="margin: 5px 0;display: block;font-size: 17px;">運用技術：Vue框架應用、組件component、api使用、axios.get()應用、watch輸入資訊及時比對、created()時lodash套件使用(延遲功能)</strong>
+       <span style="margin: 5px 0;display: block;font-size: 15px;">可輸入scars測試</span>
+       <div  style="min-height: 100px;border: solid 1px #999;padding: 10px;display: inline-block;margin: 10px 0px;">
+      
+        <login-check></login-check>
+    </div>
+    </div>
+    <script src="js/all.js"></script>
+</body>
+</html>
+
