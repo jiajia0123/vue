@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="banner">
-      <h1 class="h1">台中景點資訊-Vue</h1>
+      <h1 class="bigtitle">台中景點資訊-Vue</h1>
       <select name="" id="sel" v-model="nowarea">
         <option :value="site.name" v-for="site in infop">
           {{ site.name }}
@@ -9,12 +9,13 @@
       </select>
     </div>
 
-    <h2 id="h2">{{ nowarea }}</h2>
+    <h2 class="area_title">{{ nowarea }}</h2>
     <div class="container">
       <div class="row">
         <div
           class="col-md-6"
           v-for="site in info"
+          :key="site.名稱"
           v-if="nowarea == site.鄉鎮市區"
         >
           <div class="bigaree">
@@ -80,64 +81,74 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style lang="scss" scoped>
 html,
 body {
   padding: 0;
 }
+.bigtitle {
+  font-size: 30px;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 0;
+  text-align: center;
+}
+.area_title {
+  color: #634c9f;
+  font-size: 27px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
 .bigaree {
   background: #fff;
   box-shadow: 1px 1px 1px 1px #c3c3c3;
   margin: 10px 10px;
   padding: 10px;
-}
-.h1 {
-  font-size: 30px;
-  font-weight: bold;
-  color: #fff;
-  margin-top: 0;
-}
-#h2 {
-  color: #634c9f;
-  font-size: 27px;
-  font-weight: bold;
-  letter-spacing: 2px;
-}
-.titsmall {
-  font-size: 17px;
-  position: absolute;
-  right: 39px;
-  top: 26px;
-  font-weight: bold;
-  color: #555;
+  position: relative;
+  .section1 {
+    .titsmall {
+      font-size: 17px;
+      position: absolute;
+      right: 39px;
+      top: 26px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .titBig {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 5px 0;
+      color: #004f8d;
+    }
+  }
 }
 
-.titBig {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 5px 0;
-  color: #004f8d;
-}
-.section2 ul {
-  list-style: none;
-  padding-left: 0;
-}
-.section2 ul li {
-  padding: 6px 0;
-  padding-left: 25px;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  height: 28px;
-}
-.section2 ul li:nth-of-type(1) {
-  background: url(~/assets/images/icons_clock.png) no-repeat left 7px;
-}
-.section2 ul li:nth-of-type(2) {
-  background: url(~/assets/images/icons_pin.png) no-repeat 1px 7px;
-}
-.section2 ul li:nth-of-type(3) {
-  background: url(~/assets/images/icons_phone.png) no-repeat 3px 7px;
+.section2 {
+  > ul {
+    list-style: none;
+    padding-left: 0;
+    > li {
+      padding: 6px 0;
+      padding-left: 25px;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      height: 28px;
+      &:nth-of-type(1) {
+        background: url(~/assets/images/icons_clock.png) no-repeat left 7px;
+      }
+      &:nth-of-type(2) {
+        background: url(~/assets/images/icons_pin.png) no-repeat 1px 7px;
+      }
+      &:nth-of-type(3) {
+        background: url(~/assets/images/icons_phone.png) no-repeat 3px 7px;
+      }
+    }
+  }
 }
 </style>
+
