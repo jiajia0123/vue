@@ -3,7 +3,7 @@
     <div class="banner">
       <h1 class="bigtitle">台中景點資訊-Vue</h1>
       <select name="" id="sel" v-model="nowarea">
-        <option :value="site.name" v-for="site in infop">
+        <option :value="site.name" v-for="site in infop" :key="site.zip">
           {{ site.name }}
         </option>
       </select>
@@ -12,12 +12,7 @@
     <h2 class="area_title">{{ nowarea }}</h2>
     <div class="container">
       <div class="row">
-        <div
-          class="col-md-6"
-          v-for="site in info"
-          :key="site.名稱"
-          v-if="nowarea == site.鄉鎮市區"
-        >
+        <div class="col-md-6" v-for="site in info2" :key="site.名稱">
           <div class="bigaree">
             <div class="section1">
               <div class="titBig">{{ site.名稱 }}</div>
@@ -55,29 +50,60 @@ import axios from "axios";
 export default Vue.extend({
   data() {
     return {
-      info: null,
-      infop: null,
-      nowarea: "西屯區"
+      nowarea: "東區"
+    };
+  },
+  watch: {
+    nowarea() {
+      axios
+        .get(
+          "http://localhost:7000/data0"
+          //         ,{params: { name: "234"
+          // }}
+        )
+        .then(response => (this.info = response.data));
+    }
+  },
+  async asyncData() {
+    const res = await axios.get("http://localhost:7000/data0");
+    const res2 = await axios.get(
+      "https://jiajia0123.github.io/mywork/api2.json"
+    );
+    return {
+      info: res.data,
+      infop: res2.data[10].districts
     };
   },
 
+  computed: {
+    info2() {
+      let arr = this.info.filter(item => {
+        return item.鄉鎮市區 == this.nowarea;
+      });
+      return arr;
+    }
+  },
   mounted() {
-    axios
-      .get("https://jiajia0123.github.io/mywork/api.json")
-      .then(response => (this.info = response.data))
-      .catch(function(error) {
-        // 请求失败处理
-        console.log(error);
-      });
-
-    axios
-      .get("https://jiajia0123.github.io/mywork/api2.json")
-      .then(response2 => (this.infop = response2.data[10].districts))
-      .catch(function(error) {
-        // 请求失败处理
-        console.log(error);
-      });
+    console.log(this.info);
   }
+
+  // mounted() {
+  //   axios
+  //     .get("https://jiajia0123.github.io/mywork/api.json")
+  //     .then(response => (this.info = response.data))
+  //     .catch(function(error) {
+  //       // 请求失败处理
+  //       console.log(error);
+  //     });
+
+  //   axios
+  //     .get("https://jiajia0123.github.io/mywork/api2.json")
+  //     .then(response2 => (this.infop = response2.data[10].districts))
+  //     .catch(function(error) {
+  //       // 请求失败处理
+  //       console.log(error);
+  //     });
+  // }
 });
 </script>
 
@@ -151,4 +177,3 @@ body {
   }
 }
 </style>
-
