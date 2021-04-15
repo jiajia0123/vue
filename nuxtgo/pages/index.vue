@@ -46,7 +46,6 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
-
 export default Vue.extend({
   data() {
     return {
@@ -64,30 +63,27 @@ export default Vue.extend({
         .then(response => (this.info = response.data));
     }
   },
-  async asyncData({ $Axios }) {
-    const res = await $Axios.Get("http://localhost:7000/data0");
-    const res2 = await $Axios.Get(
+  async asyncData() {
+    const res = await axios.get("http://localhost:7000/data0");
+    const res2 = await axios.get(
       "https://jiajia0123.github.io/mywork/api2.json"
     );
-
     return {
-      info: res,
-      infop: res2
+      info: res.data,
+      infop: res2.data[10].districts
     };
   },
-
   computed: {
     info2() {
-      // let arr = this.info.filter(item => {
-      //   return item.鄉鎮市區 == this.nowarea;
-      // });
-      // return arr;
+      let arr = this.info.filter(item => {
+        return item.鄉鎮市區 == this.nowarea;
+      });
+      return arr;
     }
   },
   mounted() {
     console.log(this.info);
   }
-
   // mounted() {
   //   axios
   //     .get("https://jiajia0123.github.io/mywork/api.json")
@@ -96,7 +92,6 @@ export default Vue.extend({
   //       // 请求失败处理
   //       console.log(error);
   //     });
-
   //   axios
   //     .get("https://jiajia0123.github.io/mywork/api2.json")
   //     .then(response2 => (this.infop = response2.data[10].districts))
@@ -127,7 +122,6 @@ body {
   letter-spacing: 2px;
   text-align: center;
 }
-
 .bigaree {
   background: #fff;
   box-shadow: 1px 1px 1px 1px #c3c3c3;
@@ -143,7 +137,6 @@ body {
       font-weight: bold;
       color: #555;
     }
-
     .titBig {
       font-size: 20px;
       font-weight: bold;
@@ -152,7 +145,6 @@ body {
     }
   }
 }
-
 .section2 {
   > ul {
     list-style: none;
