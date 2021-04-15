@@ -10,8 +10,6 @@
 
 - [X] ~~*v-for、v-if 不要同時使用*~~ [2021-04-13]
 
-- [ ] 將 axios 封裝成 plugins 或 modules，可以在 component 內用 this.$axios
-
 - [X] ~~*使用 json-server API 服務 每筆資料選擇時就抓一次API*~~ [2021-04-13]
 
 
