@@ -64,23 +64,24 @@ export default Vue.extend({
         .then(response => (this.info = response.data));
     }
   },
-  async asyncData() {
-    const res = await axios.get("http://localhost:7000/data0");
-    const res2 = await axios.get(
+  async asyncData({ $Axios }) {
+    const res = await $Axios.Get("http://localhost:7000/data0");
+    const res2 = await $Axios.Get(
       "https://jiajia0123.github.io/mywork/api2.json"
     );
+
     return {
-      info: res.data,
-      infop: res2.data[10].districts
+      info: res,
+      infop: res2
     };
   },
 
   computed: {
     info2() {
-      let arr = this.info.filter(item => {
-        return item.鄉鎮市區 == this.nowarea;
-      });
-      return arr;
+      // let arr = this.info.filter(item => {
+      //   return item.鄉鎮市區 == this.nowarea;
+      // });
+      // return arr;
     }
   },
   mounted() {
