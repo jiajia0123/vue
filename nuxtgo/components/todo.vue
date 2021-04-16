@@ -24,12 +24,16 @@ import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import adr from "~/pages/compon/adr.vue";
 
 @Component({
+
+  //inject 待練習
+  
   //組件引入方法
   components: {
     adr
   }
 })
 export default class haha extends Vue {
+  /** */
   //data
   textbar: any = "123";
   newvalue: string = "123";
