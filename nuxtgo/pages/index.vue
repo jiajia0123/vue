@@ -39,7 +39,7 @@
       </p>
     </div>
 
-    <todo :merr="mey" />
+    <todo :merr="mey">這是父組件插曹</todo>
 
   </div>
 </template>

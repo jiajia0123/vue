@@ -12,6 +12,10 @@
 
     <br />
     <adr />
+
+    <h1>
+      <slot>插曹{{textbar}}</slot>
+    </h1>
   </div>
 </template>
 
