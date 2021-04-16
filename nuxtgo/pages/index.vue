@@ -2,17 +2,26 @@
   <div id="app">
     <div class="banner">
       <h1 class="bigtitle">台中景點資訊-Vue</h1>
-      <select name="" id="sel" v-model="nowarea">
-        <option :value="site.name" v-for="site in infop" :key="site.zip">
+
+      <select name="" id="sel" v-model="districtsZip">
+        <option
+          :value="site.zip"
+          v-for="site in districtsCodeArry"
+          :key="site.zip"
+        >
           {{ site.name }}
         </option>
       </select>
     </div>
 
-    <h2 class="area_title">{{ nowarea }}</h2>
+    <h2 class="area_title">{{ districtsArea }}</h2>
     <div class="container">
       <div class="row">
-        <div class="col-md-6" v-for="site in info2" :key="site.名稱">
+        <div
+          class="col-md-6"
+          v-for="site in TouristDestination_final"
+          :key="site.名稱"
+        >
           <div class="bigaree">
             <div class="section1">
               <div class="titBig">{{ site.名稱 }}</div>
@@ -40,7 +49,6 @@
     </div>
 
     <todo :merr="mey">這是父組件插曹</todo>
-
   </div>
 </template>
 
@@ -49,8 +57,12 @@ import axios from "axios";
 
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
-@Component({
+interface AreaOption {
+  zip: number;
+  name: string;
+}
 
+@Component({
   //asyncData打API
   async asyncData({ $AAxios }) {
     console.log("你好嗎");
@@ -60,45 +72,48 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
       "https://jiajia0123.github.io/mywork/api2.json"
     );
     return {
-      info: res.data,
-      infop: res2.data[10].districts
+      TouristDestination_initial: res.data,
+      districtsCodeArry: res2.data[10].districts
     };
   }
 })
 export default class HelloWorld22 extends Vue {
-  //data
-  nowarea: string = "東區";
-  mey:number =123
-  info:[]=[]
-  infop:[]=[]
-  //watch
-  @Watch("nowarea")
-  ApiGet(val: string, oldVal: string) {
+  /**郵遞區號 */
+  districtsZip: number = 401;
+
+  /**所選擇郵遞郵遞區號對應的地區名稱 */
+  get districtsArea() {
+    return (
+      this.districtsCodeArry.find(item => {
+        return item.zip == this.districtsZip;
+      })?.name || "東區"
+    );
+  }
+  /**API郵遞區號陣列 */
+  districtsCodeArry: AreaOption[] = [];
+
+  /**API旅遊景點初始陣列 */
+
+  TouristDestination_initial: any[] = [];
+
+  /**所選擇的地區對應的旅遊景點列表*/
+  get TouristDestination_final() {
+    const arr = this.TouristDestination_initial.filter(item =>item.鄉鎮市區 == this.districtsArea);
+    return arr;
+  }
+
+  /**組件測試用 */
+  mey: number = 123;
+
+  /**監聽郵遞區號列表改變，就重新打API */
+  @Watch("districtsZip")
+  ApiGet() {
     axios
       .get(
         "http://localhost:7000/data0" //,{params: { name: "234"}}
       )
-      .then(response => (this.info = response.data));
+      .then(response => (this.TouristDestination_initial = response.data));
   }
-
-  //computed
-  get info2() {
-    let arr = this.info.filter(item => {
-      return item.鄉鎮市區 == this.nowarea;
-    });
-    return arr;
-  }
-
-  //mounted打API
-  // async mounted() {
-  //   this.$AAxios_POST("http://localhost:7000/data0");
-
-  //   const res = await this.$AAxios("http://localhost:7000/data0");
-  //   const res2 = await axios.get(
-  //     "https://jiajia0123.github.io/mywork/api2.json"
-  //   );
-  //   (this.info = res.data), (this.infop = res2.data[10].districts);
-  // }
 }
 </script>
 

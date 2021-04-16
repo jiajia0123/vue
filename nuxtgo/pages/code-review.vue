@@ -48,13 +48,12 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 /** 地區選項 */
 interface AreaOption {
   /** 郵遞區號 */
-  zip: string,
+  zip: string;
   /** 地區名稱 */
-  name: string
+  name: string;
 }
 
 @Component({
-
   //asyncData打API
   async asyncData({ $axios }) {
     const res = await $axios("http://localhost:7000/data0");
@@ -64,31 +63,29 @@ interface AreaOption {
     return {
       info: res.data,
       areaOptions: res2.data[10].districts,
-      nowArea:res2.data[10].districts[0].zip
+      nowArea: res2.data[10].districts[0].zip
     };
   }
 })
 export default class HelloWorld22 extends Vue {
   /** 所選擇的地區 */
-  nowArea:string = "";
+  nowArea: string = "";
 
   /** 地區選單 - 選項列表 */
-  areaOptions: AreaOption[] = []
+  areaOptions: AreaOption[] = [];
 
-  info: any[] = []
+  info: any[] = [];
 
   get areaLabel() {
-    return this.selectedAreaItem?.name
+    return this.selectedAreaItem?.name;
   }
 
   get selectedAreaItem() {
-    return this.areaOptions.find(option =>
-      option.zip === this.nowArea
-    )
+    return this.areaOptions.find(option => option.zip === this.nowArea);
   }
 
   get info2() {
-    const name = this.selectedAreaItem?.name
+    const name = this.selectedAreaItem?.name;
     return name ? this.info.filter(item => item.鄉鎮市區 == name) : [];
   }
 
@@ -99,7 +96,9 @@ export default class HelloWorld22 extends Vue {
       .get(
         "http://localhost:7000/data0" //,{params: { name: "234"}}
       )
-      .then(response => { this.info = response.data });
+      .then(response => {
+        this.info = response.data;
+      });
   }
 }
 </script>

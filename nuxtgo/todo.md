@@ -12,10 +12,11 @@
 
 - [X] ~~*使用 json-server API 服務 每筆資料選擇時就抓一次API*~~ [2021-04-13]
 
-- [ ] 參考 https://typescript.nuxtjs.org/zh-Hant/cookbook/components 將專案改成 Class API 的寫法，請安裝 nuxt-property-decorator 取代 vue-property-decorator
+- [X] ~~*參考 https://typescript.nuxtjs.org/zh-Hant/cookbook/components 將專案改成 Class API 的寫法，請安裝 nuxt-property-decorator 取代 vue-property-decorator*~~ [2021-04-16]
 
 - [ ] 部分資料改成呼叫 json-server API 取得
 
-- [ ] 下拉式選單 v-model 綁定資料 ID
+- [X] ~~*下拉式選單 v-model 綁定資料 ID*~~ [2021-04-16]
+
 
 - [ ] 新增景點增刪修功能
