@@ -4,21 +4,32 @@
     <br />
     {{ me2 }}
     <input type="text" v-model="textbar" />
+    <br />
     新值:{{ newvalue }}<br />
     舊值{{ oldvalue }}
+    <br />
     <button @click="gm">按鈕</button>
+
+    <br />
+    <adr />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
+import adr from "~/pages/compon/adr.vue";
 
-@Component
+@Component({
+  //組件引入方法
+  components: {
+    adr
+  }
+})
 export default class haha extends Vue {
   //data
   textbar: any = "123";
-  newvalue:string="123"
-  oldvalue:string="123"
+  newvalue: string = "123";
+  oldvalue: string = "123";
   //props寫法
   @Prop({ type: [Number], default: "這是預設" })
   merr?: string;
@@ -38,7 +49,12 @@ export default class haha extends Vue {
     console.log(typeof this.me2);
   }
 
+  //watch寫法
   @Watch("textbar")
-  add(nevalue: string, old: string) {}
+  add(nevalue: string, old: string) {
+    this.newvalue = nevalue;
+    this.oldvalue = old;
+    alert("你改動了值");
+  }
 }
 </script>

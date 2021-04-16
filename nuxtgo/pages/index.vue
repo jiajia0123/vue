@@ -40,6 +40,7 @@
     </div>
 
     <todo :merr="mey" />
+
   </div>
 </template>
 
@@ -49,6 +50,7 @@ import axios from "axios";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component({
+
   //asyncData打API
   async asyncData({ $AAxios }) {
     console.log("你好嗎");
