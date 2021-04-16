@@ -39,20 +39,32 @@
       </p>
     </div>
 
-    <todo :merr="mey" />
+    <span>test55555</span>
   </div>
 </template>
 
-<script lang="ts">
+<script>
+import Vue from "vue";
 import axios from "axios";
-
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-
-@Component({
-  //asyncData打API
+export default Vue.extend({
+  data() {
+    return {
+      nowarea: "東區"
+    };
+  },
+  watch: {
+    nowarea() {
+      axios
+        .get(
+          "http://localhost:7000/data0"
+          //         ,{params: { name: "234"
+          // }}
+        )
+        .then(response => (this.info = response.data));
+    }
+  },
   async asyncData({ $AAxios }) {
     console.log("你好嗎");
-
     const res = await $AAxios("http://localhost:7000/data0");
     const res2 = await axios.get(
       "https://jiajia0123.github.io/mywork/api2.json"
@@ -61,43 +73,37 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
       info: res.data,
       infop: res2.data[10].districts
     };
-  }
-})
-export default class HelloWorld22 extends Vue {
-  //data
-  nowarea: string = "東區";
-  mey:number =123
-  info:[]=[]
-  infop:[]=[]
-  //watch
-  @Watch("nowarea")
-  ApiGet(val: string, oldVal: string) {
-    axios
-      .get(
-        "http://localhost:7000/data0" //,{params: { name: "234"}}
-      )
-      .then(response => (this.info = response.data));
-  }
+  },
+  computed: {
+    info2() {
+      let arr = this.info.filter(item => {
+        return item.鄉鎮市區 == this.nowarea;
+      });
+      return arr;
+    }
+  },
+  async mounted() {
+    this.$AAxios_POST("http://localhost:7000/data0");
 
-  //computed
-  get info2() {
-    let arr = this.info.filter(item => {
-      return item.鄉鎮市區 == this.nowarea;
-    });
-    return arr;
+    // console.log( $AAxios("http://localhost:7000/data0"));
   }
-
-  //mounted打API
-  // async mounted() {
-  //   this.$AAxios_POST("http://localhost:7000/data0");
-
-  //   const res = await this.$AAxios("http://localhost:7000/data0");
-  //   const res2 = await axios.get(
-  //     "https://jiajia0123.github.io/mywork/api2.json"
-  //   );
-  //   (this.info = res.data), (this.infop = res2.data[10].districts);
+  // mounted() {
+  //   axios
+  //     .get("https://jiajia0123.github.io/mywork/api.json")
+  //     .then(response => (this.info = response.data))
+  //     .catch(function(error) {
+  //       // 请求失败处理
+  //       console.log(error);
+  //     });
+  //   axios
+  //     .get("https://jiajia0123.github.io/mywork/api2.json")
+  //     .then(response2 => (this.infop = response2.data[10].districts))
+  //     .catch(function(error) {
+  //       // 请求失败处理
+  //       console.log(error);
+  //     });
   // }
-}
+});
 </script>
 
 <style lang="scss" scoped>
