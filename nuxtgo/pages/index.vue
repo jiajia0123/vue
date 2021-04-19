@@ -22,7 +22,7 @@
           <span>景點名稱</span><input type="text" v-model="name" />
         </div>
         <div class="add_Tourist_block">
-          <span>cityname</span>
+          <span>行政區域</span>
           <select v-model="area">
             <option
               :value="site.name"
