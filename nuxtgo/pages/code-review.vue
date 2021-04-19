@@ -17,7 +17,7 @@
           <div class="bigaree">
             <div class="section1">
               <div class="titBig">{{ site.名稱 }}</div>
-              <div class="titsmall">{{ site.鄉鎮市區 }}</div>
+              <div class="titsmall">{{ site.cityname }}</div>
             </div>
             <div class="section2">
               <ul>
@@ -86,7 +86,7 @@ export default class HelloWorld22 extends Vue {
 
   get info2() {
     const name = this.selectedAreaItem?.name;
-    return name ? this.info.filter(item => item.鄉鎮市區 == name) : [];
+    return name ? this.info.filter(item => item.cityname == name) : [];
   }
 
   //watch

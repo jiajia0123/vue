@@ -12,12 +12,11 @@
     <h2 class="area_title">{{ nowarea }}</h2>
     <div class="container">
       <div class="row">
-
         <div class="col-md-6" v-for="site in info2" :key="site.名稱">
           <div class="bigaree">
             <div class="section1">
               <div class="titBig">{{ site.名稱 }}</div>
-              <div class="titsmall">{{ site.鄉鎮市區 }}</div>
+              <div class="titsmall">{{ site.cityname }}</div>
             </div>
             <div class="section2">
               <ul>
@@ -45,25 +44,25 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'nuxt-property-decorator'
+import { Component, Vue, Watch } from "nuxt-property-decorator";
 
 @Component
 export default class IndexPage extends Vue {
   // data
-  nowarea: string = "東區"
-  info: any[] = []
-  infop: any[] = []
+  nowarea: string = "東區";
+  info: any[] = [];
+  infop: any[] = [];
 
   // computed
   get info2(): any[] {
-    return []
+    return [];
   }
 
   // watch
-  @Watch('nowarea')
+  @Watch("nowarea")
   async onNowareaChange(newVal: string) {
-    const res = await this.$axios.get("http://localhost:7000/data0")
-    this.info = res.data
+    const res = await this.$axios.get("http://localhost:7000/data0");
+    this.info = res.data;
   }
 
   async mounted() {
@@ -72,11 +71,10 @@ export default class IndexPage extends Vue {
       "https://jiajia0123.github.io/mywork/api2.json"
     );
 
-    this.info = res.data
-    this.infop = res2.data
+    this.info = res.data;
+    this.infop = res2.data;
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

@@ -24,5 +24,6 @@
 
 
 
-Q:colelog兩個錯誤
+Q1:colelog 錯誤訊息 AAXIOS 自己做的plugins
+Q2:tel?: number | null = null; 這樣寫可以嗎?
 

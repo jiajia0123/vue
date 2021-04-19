@@ -16,7 +16,7 @@
           <div class="bigaree">
             <div class="section1">
               <div class="titBig">{{ site.名稱 }}</div>
-              <div class="titsmall">{{ site.鄉鎮市區 }}</div>
+              <div class="titsmall">{{ site.cityname }}</div>
             </div>
             <div class="section2">
               <ul>
@@ -77,7 +77,7 @@ export default Vue.extend({
   computed: {
     info2() {
       let arr = this.info.filter(item => {
-        return item.鄉鎮市區 == this.nowarea;
+        return item.cityname == this.nowarea;
       });
       return arr;
     }
