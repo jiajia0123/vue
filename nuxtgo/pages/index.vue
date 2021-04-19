@@ -1,8 +1,9 @@
 <template>
   <div id="app">
     <div class="banner">
+      {{ districtsArea }}
       <h1 class="bigtitle">台中景點資訊-Vue</h1>
-
+      {{ res2 }}
       <select name="" id="sel" v-model="districtsZip">
         <option
           :value="site.zip"
@@ -14,13 +15,33 @@
       </select>
     </div>
 
+    <div class="container">
+      <div class="add_Tourist">
+        <div class="add_Tourist_block">
+          <span>編號</span><input type="text" v-model="id" />
+        </div>
+        <div class="add_Tourist_block">
+          <span>景點名稱</span><input type="text" v-model="name" />
+        </div>
+        <div class="add_Tourist_block">
+          <span>鄉鎮市區</span><input type="text" v-model="area" />
+        </div>
+        <div class="add_Tourist_block">
+          <span>地址</span><input type="text" v-model="address" />
+        </div>
+        <div class="add_Tourist_block">
+          <span>電話</span><input type="text" v-model="tel" />
+        </div>
+        <button @click="add_list">新增</button>
+      </div>
+    </div>
     <h2 class="area_title">{{ districtsArea }}</h2>
     <div class="container">
       <div class="row">
         <div
           class="col-md-6"
-          v-for="site in TouristDestination_final"
-          :key="site.名稱"
+          v-for="site in touristDestination_final"
+          :key="site.id"
         >
           <div class="bigaree">
             <div class="section1">
@@ -31,8 +52,9 @@
               <ul>
                 <li class="opentime">{{ site.名稱 }}</li>
                 <li class="add">{{ site.地址 }}</li>
-                <li class="tel">{{ site.電話 }}</li>
+                <li class="tel">{{ site.電話  }}</li>
               </ul>
+              <button @click="delete_list(site.id)">{{site.id}}刪除</button>
             </div>
           </div>
         </div>
@@ -61,44 +83,81 @@ interface AreaOption {
   zip: number;
   name: string;
 }
-
+interface addList {
+  id?: number;
+  名稱: string;
+  鄉鎮市區: string;
+  地址: string;
+  電話: number;
+}
 @Component({
-  //asyncData打API
+  /**取得郵遞區號陣列districtsCodeArry*/
+  /**取得旅遊景點初始陣列touristDestination_initial*/
   async asyncData({ $AAxios }) {
     console.log("你好嗎");
 
-    const res = await $AAxios("http://localhost:7000/data0");
-    const res2 = await axios.get(
-      "https://jiajia0123.github.io/mywork/api2.json"
-    );
+    const res = await $AAxios("http://localhost:7000/tourist");
+    const res2 = await axios.get("http://localhost:7000/districts");
     return {
-      TouristDestination_initial: res.data,
-      districtsCodeArry: res2.data[10].districts
+      touristDestination_initial: res.data,
+      districtsCodeArry: res2.data
     };
   }
 })
-export default class HelloWorld22 extends Vue {
+export default class HelloWorld extends Vue {
+  id?: number
+  name: string = "";
+  area: string = "";
+  address: string = "";
+  tel?: number 
+
+  add_list() {
+    axios.post(
+      "http://localhost:7000/tourist",
+      {
+        id: this.id,
+        名稱: this.name,
+        鄉鎮市區: this.area,
+        地址: this.address,
+        電話: this.tel
+      } //,{params: { name: "234"}}
+    );
+  }
+
+  delete_list(idcode:string) {
+    axios.delete(
+      `http://localhost:7000/tourist/${idcode}`
+    );
+  }
+
+    delete_patch(idcode:string) {
+    axios.patch(
+      `http://localhost:7000/tourist/${idcode}`,{}
+    );
+  }
+
   /**郵遞區號 */
   districtsZip: number = 401;
 
   /**所選擇郵遞郵遞區號對應的地區名稱 */
-  get districtsArea() {
+  get districtsArea(): string {
     return (
       this.districtsCodeArry.find(item => {
         return item.zip == this.districtsZip;
       })?.name || "東區"
     );
   }
-  /**API郵遞區號陣列 */
+  /**郵遞區號陣列 */
   districtsCodeArry: AreaOption[] = [];
 
-  /**API旅遊景點初始陣列 */
-
-  TouristDestination_initial: any[] = [];
+  /**旅遊景點初始陣列 */
+  touristDestination_initial: any[] = [];
 
   /**所選擇的地區對應的旅遊景點列表*/
-  get TouristDestination_final() {
-    const arr = this.TouristDestination_initial.filter(item =>item.鄉鎮市區 == this.districtsArea);
+  get touristDestination_final() {
+    const arr = this.touristDestination_initial.filter(
+      item => item.鄉鎮市區 == this.districtsArea
+    );
     return arr;
   }
 
@@ -106,13 +165,13 @@ export default class HelloWorld22 extends Vue {
   mey: number = 123;
 
   /**監聽郵遞區號列表改變，就重新打API */
-  @Watch("districtsZip")
+  @Watch("districtsArea")
   ApiGet() {
     axios
       .get(
-        "http://localhost:7000/data0" //,{params: { name: "234"}}
+        "http://localhost:7000/tourist" //,{params: { name: "234"}}
       )
-      .then(response => (this.TouristDestination_initial = response.data));
+      .then(response => (this.touristDestination_initial = response.data));
   }
 }
 </script>
@@ -121,6 +180,7 @@ export default class HelloWorld22 extends Vue {
 html,
 body {
   padding: 0;
+  font-family: "微軟正黑體";
 }
 .bigtitle {
   font-size: 30px;
@@ -181,6 +241,30 @@ body {
         background: url(~/assets/images/icons_phone.png) no-repeat 3px 7px;
       }
     }
+  }
+}
+
+.add_Tourist {
+  width: 330px;
+  margin-top: 10px;
+  background: #fff;
+  padding: 11px 20px;
+  border: solid 2px #8d86ce;
+  .add_Tourist_block span {
+    width: 68px;
+    display: inline-block;
+    text-align: justify;
+    text-align-last: justify;
+  }
+  .add_Tourist_block input {
+    display: inline-block;
+    margin-bottom: 6px;
+    margin-left: 5px;
+  }
+  button {
+    margin: 0 0 0 auto;
+    display: block;
+    margin-right: 30px;
   }
 }
 </style>

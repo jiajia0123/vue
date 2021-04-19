@@ -69,6 +69,6 @@ body {
   margin: 0;
 }
 .container {
-  min-height: 446px;
+ 
 }
 </style>
