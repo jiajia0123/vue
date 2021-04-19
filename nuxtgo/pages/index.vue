@@ -54,21 +54,46 @@
             <div class="section2">
               <ul>
                 <li class="opentime">
-                  <div>{{ site.名稱 }}</div>
-                  <input type="text" />
+                  <div v-if="active !== site.id">
+                    {{ site.名稱 }}
+                  </div>
+
+                  <input
+                    v-if="active == site.id"
+                    type="text"
+                    v-model="patch_name"
+                  />
                 </li>
 
                 <li class="add">
-                  <div>{{ site.地址 }}</div>
-                  <input type="text" />
+                  <div v-if="active !== site.id">
+                    {{ site.地址 }}
+                  </div>
+                  <input
+                    v-if="active == site.id"
+                    type="text"
+                    v-model="patch_address"
+                  />
                 </li>
                 <li class="tel">
-                  <div>{{ site.電話 }}</div>
-                  <input type="text" />
+                  <div v-if="active !== site.id">
+                    {{ site.電話 }}
+                  </div>
+                  <input
+                    v-if="active == site.id"
+                    type="text"
+                    v-model="patch_phone"
+                  />
                 </li>
               </ul>
-              <button @click="delete_list(site.id, site.cityname)">
-                {{ site.id }}刪除
+              <button @click="delete_list(site.id, site.cityname)">刪除</button>
+              <button
+                @click="patch_data(site.名稱, site.地址, site.電話, site.id)"
+              >
+                修改
+              </button>
+              <button @click="patch_list(site.id, site.cityname, site)">
+                更新
               </button>
             </div>
           </div>
@@ -122,43 +147,66 @@ export default class HelloWorld extends Vue {
   /**旅遊景點初始陣列 */
   touristDestination: any[] = [];
 
+  /**新增旅遊景點 */
   id?: number;
   name: string = "";
   area: string = "";
   address: string = "";
   tel?: number | null = null;
 
-  add_list() {
-    axios
-      .post(
-        "http://localhost:7000/tourist",
-        {
-          id: this.id,
-          名稱: this.name,
-          cityname: this.area,
-          地址: this.address,
-          電話: this.tel
-        } //,{params: { name: "234"}}
-      )
-      .then(response => (this.touristDestination = response.data));
+  async add_list() {
+    await axios.post(
+      "http://localhost:7000/tourist",
+      {
+        id: this.id,
+        名稱: this.name,
+        cityname: this.area,
+        地址: this.address,
+        電話: this.tel
+      } //,{params: { name: "234"}}
+    );
     this.id = undefined;
     this.name = "";
     this.area = "";
     this.address = "";
     this.tel = undefined;
+    await axios
+      .get(`http://localhost:7000/tourist?cityname=${this.code}`)
+      .then(response => (this.touristDestination = response.data));
   }
 
+  /**修改旅遊景點 */
+  patch_name?: string = "";
+  patch_address?: string = "";
+  patch_phone?: string = "";
+
+  active: string = "true";
+  patch_data(name: string, address: string, phone: string, id: string) {
+    this.active = id;
+    this.patch_name = name;
+    this.patch_address = address;
+    this.patch_phone = phone;
+  }
+
+  async patch_list(idcode: string, cityname: string, context: any) {
+    const code = encodeURI(cityname);
+    await axios.patch(`http://localhost:7000/tourist/${idcode}`, {
+      名稱: this.patch_name || context.名稱,
+      地址: this.patch_address || context.地址,
+      電話: this.patch_phone || context.電話
+    });
+    await axios
+      .get(`http://localhost:7000/tourist?cityname=${code}`)
+      .then(response => (this.touristDestination = response.data));
+    this.active = true;
+  }
+
+  /**刪除旅遊景點 */
   async delete_list(idcode: string, cityname: string) {
     const code = encodeURI(cityname);
     await axios.delete(`http://localhost:7000/tourist/${idcode}`);
     await axios
       .get(`http://localhost:7000/tourist?cityname=${code}`)
-      .then(response => (this.touristDestination = response.data));
-  }
-
-  delete_patch(idcode: string) {
-    axios
-      .patch(`http://localhost:7000/tourist/${idcode}`, {})
       .then(response => (this.touristDestination = response.data));
   }
 
