@@ -83,13 +83,7 @@ interface AreaOption {
   zip: number;
   name: string;
 }
-interface addList {
-  id?: number;
-  名稱: string;
-  鄉鎮市區: string;
-  地址: string;
-  電話: number;
-}
+
 @Component({
   /**取得郵遞區號陣列districtsCodeArry*/
   /**取得旅遊景點初始陣列touristDestination_initial*/
@@ -109,7 +103,7 @@ export default class HelloWorld extends Vue {
   name: string = "";
   area: string = "";
   address: string = "";
-  tel?: number 
+  tel?: number
 
   add_list() {
     axios.post(
