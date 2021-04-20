@@ -21,6 +21,18 @@
 
 - [X] ~~*新增景點增刪修功能*~~ [2021-04-19]
 
+- [ ] 學習 git flow 流程，並使用該流程開發專案
+
+- [ ] [feature/nuxt-axios] 將專案內的 axios 改成使用 https://axios.nuxtjs.org/
+
+- [ ] [feature/vue-loading-overlay] 新增等待 API 時的讀取畫面，使用 https://github.com/ankurk91/vue-loading-overlay 套件，樣式自訂
+
+- [ ] [feature/vee-validate] 新增表單驗證功能，使用 https://vee-validate.logaretm.com/v3 套件，驗證規則自訂，輸入文字時及按提交鈕時驗證，錯誤提示顯示在該輸入框下方。
+
+- [ ] [feature/env] 研究 .env 檔，新增 API_URL=https://localhost:7000/
+
+- [ ] [feature/axios-instance] 新增一個 axios 實例，baseUrl 為 .vue 檔的 API_URL，並在專案內使用新的 axios 實例呼叫 API
+
 
 
 
