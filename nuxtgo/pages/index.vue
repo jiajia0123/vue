@@ -1,8 +1,6 @@
 <template>
   <div id="app">
     <div class="banner">
-      {{ districtsArea }}
-      {{ code }}
       <h1 class="bigtitle">台中景點資訊-Vue</h1>
 
       <select name="" id="sel" v-model="districtsZip">
@@ -88,11 +86,15 @@
               </ul>
               <button @click="delete_list(site.id, site.cityname)">刪除</button>
               <button
+                v-if="active !== site.id"
                 @click="patch_data(site.名稱, site.地址, site.電話, site.id)"
               >
                 修改
               </button>
-              <button @click="patch_list(site.id, site.cityname, site)">
+              <button
+                v-if="active == site.id"
+                @click="patch_list(site.id, site.cityname)"
+              >
                 更新
               </button>
             </div>
@@ -110,7 +112,7 @@
       </p>
     </div>
 
-    <todo :merr="mey">這是父組件插曹</todo>
+    <!-- <todo :merr="mey">這是父組件插曹</todo> -->
   </div>
 </template>
 
@@ -147,6 +149,31 @@ export default class HelloWorld extends Vue {
   /**旅遊景點初始陣列 */
   touristDestination: any[] = [];
 
+  /**郵遞區號(綁定v-model) */
+  districtsZip: number = 401;
+
+  /**郵遞區號所對應的地區名稱*/
+  get districtsArea(): string {
+    return (
+      this.districtsCodeArry.find(item => {
+        return item.zip == this.districtsZip;
+      })?.name || "東區"
+    );
+  }
+
+  /**地區名稱轉成encodeURI */
+  get code(): string {
+    return encodeURI(this.districtsArea);
+  }
+
+  /**地區名稱(districtsArea)改變，重新渲染資料*/
+  @Watch("districtsArea")
+  ApiGet() {
+    axios
+      .get(`http://localhost:7000/tourist?cityname=${this.code}`)
+      .then(response => (this.touristDestination = response.data));
+  }
+
   /**新增旅遊景點 */
   id?: number;
   name: string = "";
@@ -155,50 +182,49 @@ export default class HelloWorld extends Vue {
   tel?: number | null = null;
 
   async add_list() {
-    await axios.post(
-      "http://localhost:7000/tourist",
-      {
-        id: this.id,
-        名稱: this.name,
-        cityname: this.area,
-        地址: this.address,
-        電話: this.tel
-      } //,{params: { name: "234"}}
-    );
+    await axios.post("http://localhost:7000/tourist", {
+      id: this.id,
+      名稱: this.name,
+      cityname: this.area,
+      地址: this.address,
+      電話: this.tel
+    });
     this.id = undefined;
     this.name = "";
     this.area = "";
     this.address = "";
-    this.tel = undefined;
+    this.tel = null;
     await axios
       .get(`http://localhost:7000/tourist?cityname=${this.code}`)
       .then(response => (this.touristDestination = response.data));
   }
 
   /**修改旅遊景點 */
+  //v-model input
   patch_name?: string = "";
   patch_address?: string = "";
   patch_phone?: string = "";
 
   active: string = "true";
+  /**修改按鈕 */
   patch_data(name: string, address: string, phone: string, id: string) {
     this.active = id;
     this.patch_name = name;
     this.patch_address = address;
     this.patch_phone = phone;
   }
-
-  async patch_list(idcode: string, cityname: string, context: any) {
+  /**更新按鈕 */
+  async patch_list(idcode: string, cityname: string) {
     const code = encodeURI(cityname);
     await axios.patch(`http://localhost:7000/tourist/${idcode}`, {
-      名稱: this.patch_name || context.名稱,
-      地址: this.patch_address || context.地址,
-      電話: this.patch_phone || context.電話
+      名稱: this.patch_name,
+      地址: this.patch_address,
+      電話: this.patch_phone
     });
     await axios
       .get(`http://localhost:7000/tourist?cityname=${code}`)
       .then(response => (this.touristDestination = response.data));
-    this.active = true;
+    this.active = "";
   }
 
   /**刪除旅遊景點 */
@@ -210,35 +236,8 @@ export default class HelloWorld extends Vue {
       .then(response => (this.touristDestination = response.data));
   }
 
-  /**郵遞區號(綁定v-model) */
-  districtsZip: number = 401;
-
-  /**郵遞區號對應的地區名稱*/
-  get districtsArea(): string {
-    return (
-      this.districtsCodeArry.find(item => {
-        return item.zip == this.districtsZip;
-      })?.name || "東區"
-    );
-  }
-
-  /**地區名稱轉成encode */
-  get code(): string {
-    return encodeURI(this.districtsArea);
-  }
-
-  /**districtsZip改變，重新渲染districtsCodeArry資料*/
-  @Watch("districtsArea")
-  ApiGet(newval: string, oldVal: string) {
-    axios
-      .get(
-        `http://localhost:7000/tourist?cityname=${this.code}` //,{params: { name: "234"}}
-      )
-      .then(response => (this.touristDestination = response.data));
-  }
-
   /**組件測試用 */
-  mey: number = 123;
+  // mey: number = 123;
 }
 </script>
 
