@@ -24,7 +24,7 @@
 - [ ] 學習 git flow 流程，並使用該流程開發專案
 
 
-- [ ] [feature/nuxt-axios] 將專案內的 axios 改成使用 https://axios.nuxtjs.org/
+- [X] ~~*[feature/nuxt-axios] 將專案內的 axios 改成使用 https://axios.nuxtjs.org/*~~ [2021-04-20]
 
 - [ ] [feature/vue-loading-overlay] 新增等待 API 時的讀取畫面，使用 https://github.com/ankurk91/vue-loading-overlay 套件，樣式自訂
 

@@ -117,8 +117,6 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
-
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 interface AreaOption {
@@ -129,13 +127,13 @@ interface AreaOption {
 @Component({
   /**取得郵遞區號陣列districtsCodeArry*/
   /**取得旅遊景點陣列touristDestination*/
-  async asyncData() {
+  async asyncData({$axios}) {
     console.log("你好嗎");
     const cityarea = encodeURI("東區");
-    const res = await axios.get(
+    const res = await $axios.get(
       `http://localhost:7000/tourist?cityname=${cityarea}`
     );
-    const res2 = await axios.get("http://localhost:7000/districts");
+    const res2 = await $axios.get("http://localhost:7000/districts");
     return {
       touristDestination: res.data,
       districtsCodeArry: res2.data
@@ -169,7 +167,7 @@ export default class HelloWorld extends Vue {
   /**地區名稱(districtsArea)改變，重新渲染資料*/
   @Watch("districtsArea")
   ApiGet() {
-    axios
+    this.$axios
       .get(`http://localhost:7000/tourist?cityname=${this.code}`)
       .then(response => (this.touristDestination = response.data));
   }
@@ -182,7 +180,7 @@ export default class HelloWorld extends Vue {
   tel?: number | null = null;
 
   async add_list() {
-    await axios.post("http://localhost:7000/tourist", {
+    await this.$axios.post("http://localhost:7000/tourist", {
       id: this.id,
       名稱: this.name,
       cityname: this.area,
@@ -194,7 +192,7 @@ export default class HelloWorld extends Vue {
     this.area = "";
     this.address = "";
     this.tel = null;
-    await axios
+    await this.$axios
       .get(`http://localhost:7000/tourist?cityname=${this.code}`)
       .then(response => (this.touristDestination = response.data));
   }
@@ -216,12 +214,12 @@ export default class HelloWorld extends Vue {
   /**更新按鈕 */
   async patch_list(idcode: string, cityname: string) {
     const code = encodeURI(cityname);
-    await axios.patch(`http://localhost:7000/tourist/${idcode}`, {
+    await this.$axios.patch(`http://localhost:7000/tourist/${idcode}`, {
       名稱: this.patch_name,
       地址: this.patch_address,
       電話: this.patch_phone
     });
-    await axios
+    await this.$axios
       .get(`http://localhost:7000/tourist?cityname=${code}`)
       .then(response => (this.touristDestination = response.data));
     this.active = "";
@@ -230,8 +228,8 @@ export default class HelloWorld extends Vue {
   /**刪除旅遊景點 */
   async delete_list(idcode: string, cityname: string) {
     const code = encodeURI(cityname);
-    await axios.delete(`http://localhost:7000/tourist/${idcode}`);
-    await axios
+    await this.$axios.delete(`http://localhost:7000/tourist/${idcode}`);
+    await this.$axios
       .get(`http://localhost:7000/tourist?cityname=${code}`)
       .then(response => (this.touristDestination = response.data));
   }
