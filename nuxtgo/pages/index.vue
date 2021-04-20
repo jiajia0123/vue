@@ -12,6 +12,11 @@
           {{ site.name }}
         </option>
       </select>
+      <selectZip
+        :districtsCodeArry="districtsCodeArry"
+        v-model="districtsZip"
+      />
+      {{districtsZip}}
     </div>
 
     <div class="container">
@@ -118,16 +123,19 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-
+import selectZip from "~/components/selectZip.vue";
 interface AreaOption {
   zip: number;
   name: string;
 }
 
 @Component({
+  components: {
+    selectZip
+  },
   /**取得郵遞區號陣列districtsCodeArry*/
   /**取得旅遊景點陣列touristDestination*/
-  async asyncData({$axios}) {
+  async asyncData({ $axios }) {
     console.log("你好嗎");
     const cityarea = encodeURI("東區");
     const res = await $axios.get(
@@ -149,6 +157,8 @@ export default class HelloWorld extends Vue {
 
   /**郵遞區號(綁定v-model) */
   districtsZip: number = 401;
+
+
 
   /**郵遞區號所對應的地區名稱*/
   get districtsArea(): string {
