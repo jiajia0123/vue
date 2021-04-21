@@ -25,15 +25,12 @@
         </div>
         <button @click="add_list">新增</button>
       </div>
-
-
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-
 
 interface AreaOption {
   zip: string;
