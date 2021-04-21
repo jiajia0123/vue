@@ -30,7 +30,7 @@
 
 - [ ] [feature/vee-validate] 新增表單驗證功能，使用 https://vee-validate.logaretm.com/v3 套件，驗證規則自訂，輸入文字時及按提交鈕時驗證，錯誤提示顯示在該輸入框下方。
 
-- [ ] [feature/component] 將新增表單及各個卡片封裝成 component 並在 index.vue 引入使用。
+- [X] ~~*[feature/component] 將新增表單及各個卡片封裝成 component 並在 index.vue 引入使用。*~~ [2021-04-21]
 
 - [ ] [feature/env] 研究 .env 檔，新增 API_URL=https://localhost:7000/
 
