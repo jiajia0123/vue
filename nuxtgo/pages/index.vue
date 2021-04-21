@@ -1,115 +1,22 @@
 <template>
   <div id="app">
-    <div class="banner">
-      <h1 class="bigtitle">台中景點資訊-Vue</h1>
+    <selectZip :districtsCodeArry="districtsCodeArry" v-model="districtsZip" />
 
-      <select name="" id="sel" v-model="districtsZip">
-        <option
-          :value="site.zip"
-          v-for="site in districtsCodeArry"
-          :key="site.zip"
-        >
-          {{ site.name }}
-        </option>
-      </select>
-      <selectZip
-        :districtsCodeArry="districtsCodeArry"
-        v-model="districtsZip"
-      />
-      {{districtsZip}}
-    </div>
+    <addTourist
+      @reloadTouris="reloadTouris"
+      :code="code"
+      :districtsCodeArry="districtsCodeArry"
+    />
 
-    <div class="container">
-      <div class="add_Tourist">
-        <div class="add_Tourist_block">
-          <span>景點名稱</span><input type="text" v-model="name" />
-        </div>
-        <div class="add_Tourist_block">
-          <span>行政區域</span>
-          <select v-model="area">
-            <option
-              :value="site.name"
-              v-for="site in districtsCodeArry"
-              :key="site.zip"
-            >
-              {{ site.name }}
-            </option>
-          </select>
-        </div>
-        <div class="add_Tourist_block">
-          <span>地址</span><input type="text" v-model="address" />
-        </div>
-        <div class="add_Tourist_block">
-          <span>電話</span><input type="text" v-model="tel" />
-        </div>
-        <button @click="add_list">新增</button>
-      </div>
-    </div>
     <h2 class="area_title">{{ districtsArea }}</h2>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6" v-for="site in touristDestination" :key="site.id">
-          <div class="bigaree">
-            <div class="section1">
-              <div class="titBig">{{ site.名稱 }}</div>
-              <div class="titsmall">{{ site.cityname }}</div>
-            </div>
-            <div class="section2">
-              <ul>
-                <li class="opentime">
-                  <div v-if="active !== site.id">
-                    {{ site.名稱 }}
-                  </div>
 
-                  <input
-                    v-if="active == site.id"
-                    type="text"
-                    v-model="patch_name"
-                  />
-                </li>
+    <card v-model="touristDestination" />
 
-                <li class="add">
-                  <div v-if="active !== site.id">
-                    {{ site.地址 }}
-                  </div>
-                  <input
-                    v-if="active == site.id"
-                    type="text"
-                    v-model="patch_address"
-                  />
-                </li>
-                <li class="tel">
-                  <div v-if="active !== site.id">
-                    {{ site.電話 }}
-                  </div>
-                  <input
-                    v-if="active == site.id"
-                    type="text"
-                    v-model="patch_phone"
-                  />
-                </li>
-              </ul>
-              <button @click="delete_list(site.id, site.cityname)">刪除</button>
-              <button
-                v-if="active !== site.id"
-                @click="patch_data(site.名稱, site.地址, site.電話, site.id)"
-              >
-                修改
-              </button>
-              <button
-                v-if="active == site.id"
-                @click="patch_list(site.id, site.cityname)"
-              >
-                更新
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- <div >爺孫組件測試<testFather v-model="districtsZip"/></div> -->
+
     <div class="footer">
-      <p>由原始javascrip版本改成Vue框架、axios使用--100%自己手寫練習</p>
-      <p><a target="_blank" href="js/台中景點資訊.js">js檔觀看</a></p>
+      <p>由原始javascrip版本改成Vue框架、axios使用</p>
+
       <p>
         <a target="_blank" href="https://jiajia0123.github.io/mywork/index.htm"
           >進入原始javascrip版本</a
@@ -122,17 +29,31 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import {
+  Component,
+  Prop,
+  Vue,
+  Watch,
+  Provide,
+  ProvideReactive
+} from "vue-property-decorator";
 import selectZip from "~/components/selectZip.vue";
+import addTourist from "~/components/addTourist.vue";
+import card from "~/components/card.vue";
+import testFather from "~/components/testFather.vue";
 interface AreaOption {
-  zip: number;
+  zip: string;
   name: string;
 }
 
 @Component({
   components: {
-    selectZip
+    selectZip,
+    addTourist,
+    card,
+    testFather
   },
+
   /**取得郵遞區號陣列districtsCodeArry*/
   /**取得旅遊景點陣列touristDestination*/
   async asyncData({ $axios }) {
@@ -155,16 +76,19 @@ export default class HelloWorld extends Vue {
   /**旅遊景點初始陣列 */
   touristDestination: any[] = [];
 
+  /*從子組件發來的事件->更新旅遊景點 */
+  reloadTouris(val: any) {
+    this.touristDestination = val;
+  }
+
   /**郵遞區號(綁定v-model) */
-  districtsZip: number = 401;
-
-
+  districtsZip: string = "401";
 
   /**郵遞區號所對應的地區名稱*/
   get districtsArea(): string {
     return (
       this.districtsCodeArry.find(item => {
-        return item.zip == this.districtsZip;
+        return item.zip === this.districtsZip;
       })?.name || "東區"
     );
   }
@@ -182,70 +106,9 @@ export default class HelloWorld extends Vue {
       .then(response => (this.touristDestination = response.data));
   }
 
-  /**新增旅遊景點 */
-  id?: number;
-  name: string = "";
-  area: string = "";
-  address: string = "";
-  tel?: number | null = null;
-
-  async add_list() {
-    await this.$axios.post("http://localhost:7000/tourist", {
-      id: this.id,
-      名稱: this.name,
-      cityname: this.area,
-      地址: this.address,
-      電話: this.tel
-    });
-    this.id = undefined;
-    this.name = "";
-    this.area = "";
-    this.address = "";
-    this.tel = null;
-    await this.$axios
-      .get(`http://localhost:7000/tourist?cityname=${this.code}`)
-      .then(response => (this.touristDestination = response.data));
-  }
-
-  /**修改旅遊景點 */
-  //v-model input
-  patch_name?: string = "";
-  patch_address?: string = "";
-  patch_phone?: string = "";
-
-  active: string = "true";
-  /**修改按鈕 */
-  patch_data(name: string, address: string, phone: string, id: string) {
-    this.active = id;
-    this.patch_name = name;
-    this.patch_address = address;
-    this.patch_phone = phone;
-  }
-  /**更新按鈕 */
-  async patch_list(idcode: string, cityname: string) {
-    const code = encodeURI(cityname);
-    await this.$axios.patch(`http://localhost:7000/tourist/${idcode}`, {
-      名稱: this.patch_name,
-      地址: this.patch_address,
-      電話: this.patch_phone
-    });
-    await this.$axios
-      .get(`http://localhost:7000/tourist?cityname=${code}`)
-      .then(response => (this.touristDestination = response.data));
-    this.active = "";
-  }
-
-  /**刪除旅遊景點 */
-  async delete_list(idcode: string, cityname: string) {
-    const code = encodeURI(cityname);
-    await this.$axios.delete(`http://localhost:7000/tourist/${idcode}`);
-    await this.$axios
-      .get(`http://localhost:7000/tourist?cityname=${code}`)
-      .then(response => (this.touristDestination = response.data));
-  }
-
-  /**組件測試用 */
-  // mey: number = 123;
+  /**爺孫組件測試 */
+  // @ProvideReactive()
+  // hago2: string = "5555";
 }
 </script>
 
@@ -255,93 +118,12 @@ body {
   padding: 0;
   font-family: "微軟正黑體";
 }
-.bigtitle {
-  font-size: 30px;
-  font-weight: bold;
-  color: #fff;
-  margin-top: 0;
-  text-align: center;
-}
+
 .area_title {
   color: #634c9f;
   font-size: 27px;
   font-weight: bold;
   letter-spacing: 2px;
   text-align: center;
-}
-.bigaree {
-  background: #fff;
-  box-shadow: 1px 1px 1px 1px #c3c3c3;
-  margin: 10px 10px;
-  padding: 10px;
-  position: relative;
-  .section1 {
-    .titsmall {
-      font-size: 17px;
-      position: absolute;
-      right: 39px;
-      top: 26px;
-      font-weight: bold;
-      color: #555;
-    }
-    .titBig {
-      font-size: 20px;
-      font-weight: bold;
-      margin: 5px 0;
-      color: #004f8d;
-    }
-  }
-}
-.section2 {
-  > ul {
-    list-style: none;
-    padding-left: 0;
-    > li {
-      padding: 6px 0;
-      padding-left: 25px;
-      width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      min-height: 28px;
-      &:nth-of-type(1) {
-        background: url(~/assets/images/icons_clock.png) no-repeat left 7px;
-      }
-      &:nth-of-type(2) {
-        background: url(~/assets/images/icons_pin.png) no-repeat 1px 7px;
-      }
-      &:nth-of-type(3) {
-        background: url(~/assets/images/icons_phone.png) no-repeat 3px 7px;
-      }
-    }
-  }
-}
-
-.add_Tourist {
-  width: 330px;
-  margin-top: 10px;
-  background: #fff;
-  padding: 11px 20px;
-  border: solid 2px #8d86ce;
-  .add_Tourist_block span {
-    width: 68px;
-    display: inline-block;
-    text-align: justify;
-    text-align-last: justify;
-  }
-  .add_Tourist_block input {
-    display: inline-block;
-    margin-bottom: 6px;
-    margin-left: 5px;
-  }
-  .add_Tourist_block select {
-    margin-left: 1px;
-    margin-bottom: 6px;
-  }
-  button {
-    margin: 0 0 0 auto;
-    display: block;
-    margin-right: 30px;
-  }
 }
 </style>

@@ -1,37 +1,52 @@
 <template>
   <div>
-    <select name="" id="sel" v-model="prop_districtsZip" @change="input_districtsZip">
-      <option
-        :value="site.zip"
-        v-for="site in districtsCodeArry"
-        :key="site.zip"
-      >
-        {{ site.name }}
+    <div class="banner">
+      <h1 class="bigtitle">台中景點資訊-Vue</h1>
+      <select name="" id="sel" :value="value" @change="emitDistrictsZip">
+        <option
+          :value="site.zip"
+          v-for="site in districtsCodeArry"
+          :key="site.zip"
+        >
+          {{ site.name }}
+        </option>
+      </select>
 
-      </option>
-    </select>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
+
 interface AreaOption {
   zip: number;
   name: string;
 }
 
-@Component({})
-export default class select_zip extends Vue {
+@Component
+export default class SelectZip extends Vue {
   /**郵遞區號陣列 */
   @Prop({ type: Array, default: () => [] })
   districtsCodeArry?: AreaOption[];
 
-  @Prop({ type: [Number,String], default: null })
-  value?: number|string;
+  @Prop({ type: [String], default: null })
+  value?: string;
 
-  prop_districtsZip=this.value
-  input_districtsZip() {
-    this.$emit('input',this.prop_districtsZip)
+  emitDistrictsZip(event: any) {
+    this.$emit("input", event.target.value);
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+.bigtitle {
+  font-size: 30px;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 0;
+  text-align: center;
+  padding-top: 20px;
+}
+</style>
