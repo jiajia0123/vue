@@ -25,12 +25,16 @@
         </div>
         <button @click="add_list">新增</button>
       </div>
+
+
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
+
+
 interface AreaOption {
   zip: string;
   name: string;
@@ -64,8 +68,7 @@ export default class AddTourist extends Vue {
     this.tel = null;
     await this.$axios
       .get(`http://localhost:7000/tourist?cityname=${this.code}`)
-      .then(response => (this.$emit("reloadTouris", response.data)));
-    ;
+      .then(response => this.$emit("reloadTouris", response.data));
   }
 }
 </script>
