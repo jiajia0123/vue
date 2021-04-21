@@ -1,11 +1,9 @@
 <template>
   <div>
-
-      <validation-provider rules="required" v-slot="{ errors }">
-        <input v-model="value" name="myinput" type="text" />
-        <span>{{ errors[0] }}</span>
-      </validation-provider>
-
+    <validation-provider rules="required" v-slot="{ errors }">
+      <input v-model="value" name="myinput" type="text" />
+      <span>{{ errors[0] }}</span>
+    </validation-provider>
   </div>
 </template>
 
