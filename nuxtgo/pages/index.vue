@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+
+    <!-- <vee />測試vee表單驗證 -->
     <selectZip :districtsCodeArry="districtsCodeArry" v-model="districtsZip" />
 
     <addTourist
@@ -41,6 +43,7 @@ import selectZip from "~/components/selectZip.vue";
 import addTourist from "~/components/addTourist.vue";
 import card from "~/components/card.vue";
 import testFather from "~/components/testFather.vue";
+import vee from "~/components/vee.vue";
 interface AreaOption {
   zip: string;
   name: string;
@@ -51,7 +54,8 @@ interface AreaOption {
     selectZip,
     addTourist,
     card,
-    testFather
+    testFather,
+    vee
   },
 
   /**取得郵遞區號陣列districtsCodeArry*/
