@@ -22,5 +22,7 @@ extend("required", {
     ValidationProvider
   }
 })
-export default class AddTourist extends Vue {}
+export default class AddTourist extends Vue {
+  
+}
 </script>
