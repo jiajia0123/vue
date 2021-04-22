@@ -118,7 +118,7 @@ export default class Card extends Vue {
   @Prop({ type: Array, default: () => [] })
   value?: any[];
 
-  /**修改旅遊景點 */
+  /**修改旅遊景點  */
   //v-model input
   patch_name?: string = "";
   patch_address?: string = "";
