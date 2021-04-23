@@ -10,7 +10,11 @@
               v-slot="{ errors, failed }"
               rules="required"
             >
-              <input type="text" v-model="name" :class="`is-${failed}`" />
+              <input
+                type="text"
+                v-model="newTour.name"
+                :class="`is-${failed}`"
+              />
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
@@ -22,7 +26,7 @@
               v-slot="{ errors, failed }"
               rules="required"
             >
-              <select v-model="area" :class="`is-${failed}`">
+              <select v-model="newTour.area" :class="`is-${failed}`">
                 <option
                   :class="`is-${failed}`"
                   :value="site.name"
@@ -43,7 +47,11 @@
               v-slot="{ errors, failed }"
               rules="required"
             >
-              <input type="text" v-model="address" :class="`is-${failed}`" />
+              <input
+                type="text"
+                v-model="newTour.address"
+                :class="`is-${failed}`"
+              />
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
@@ -54,11 +62,17 @@
               v-slot="{ errors, failed }"
               rules="required|tel"
             >
-              <input type="text" v-model="tel" :class="`is-${failed}`" />
+              <input
+                type="text"
+                v-model="newTour.tel"
+                :class="`is-${failed}`"
+              />
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
-          <button @click="add_list">新增</button>
+          <div ref="loadingAdd" class="loadingArea" style="position: relative;">
+            <button @click="add_list">新增</button>
+          </div>
         </div>
       </ValidationObserver>
     </div>
@@ -67,8 +81,12 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { ValidationProvider, extend, ValidationObserver } from "vee-validate";
-import { email, required } from "vee-validate/dist/rules";
+import { ValidationProvider, extend, ValidationObserver } from "vee-validate"; //驗證規則
+import { email, required } from "vee-validate/dist/rules"; //驗證規則
+import Loading from "vue-loading-overlay"; //loading.vue
+import "vue-loading-overlay/dist/vue-loading.css"; //loading.vue
+import loadingSvg from "~/components/loadingSvg.vue"; //loading.vue
+Vue.use(Loading, { color: "blue" });
 interface AreaOption {
   zip: string;
   name: string;
@@ -88,53 +106,91 @@ extend("tel", {
 @Component({
   components: {
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
+    loadingSvg
   }
 })
 export default class AddTourist extends Vue {
-  $refs!: {
-    form: InstanceType<typeof ValidationObserver>;
-  };
   @Prop({ type: Array, default: () => [] })
-  districtsCodeArry?: AreaOption[];
+  districtsCodeArry!: AreaOption[];
   @Prop({ type: String, default: null })
   code?: string;
 
   /**新增旅遊景點 */
-  id?: number;
-  name: string = "";
-  area: string = "";
-  address: string = "";
-  tel?: number | null = null;
 
-  add_list() {
-    this.$refs.form.validate().then(async success => {
-      if (!success) {
-        return;
-      }
-      await this.$axios.post("http://localhost:7000/tourist", {
-        id: this.id,
-        名稱: this.name,
-        cityname: this.area,
-        地址: this.address,
-        電話: this.tel
-      });
-      this.id = undefined;
-      this.name = "";
-      this.area = "";
-      this.address = "";
-      this.tel = null;
+  newTour = this.addTour();
 
-      await this.$axios
-        .get(`http://localhost:7000/tourist?cityname=${this.code}`)
-        .then(response => this.$emit("reloadTouris", response.data));
+  addTour() {
+    return {
+      name: "",
+      area: "",
+      address: "",
+      tel: null
+    };
+  }
 
-      this.$nextTick(() => {
-        this.$refs.form.reset();
-      });
+  $refs!: {
+    form: InstanceType<typeof ValidationObserver>;
+    loadingAdd: InstanceType<typeof ValidationObserver>;
+  };
+  $loading: any;
+  fullPage: boolean = false;
+  async add_list() {
+    let loader = this.$loading.show(
+      { container: this.fullPage ? null : this.$refs.loadingAdd },
+      { default: this.$createElement("loadingSvg") }
+    );
+    const success = await this.$refs.form.validate();
+    if (!success) {
+      loader.hide();
+      return;
+    }
+
+    this.$refs.form.reset();
+
+    const { name, area, address, tel } = this.newTour;
+    await this.$axios.post("http://localhost:7000/tourist", {
+      名稱: name,
+      cityname: area,
+      地址: address,
+      電話: tel
     });
+
+    this.newTour = this.addTour();
+
+    const response = await this.$axios.get(
+      `http://localhost:7000/tourist?cityname=${this.code}`
+    );
+    this.$emit("reloadTouris", response.data);
+    loader.hide();
   }
 }
+
+// add_list () {
+//   this.$refs.form.validate().then(success => {
+//     if (!success) {
+//       return;
+//     }
+
+//     const { name, cityname, address, tel } = this.formData
+
+//     this.$axios.post("http://localhost:7000/tourist", {
+//       名稱: name,
+//       cityname,
+//       地址: address,
+//       電話: tel
+//     }).then(() => {
+//       this.formData = this.getDefaultFromData()
+
+//       this.$axios
+//         .get(`http://localhost:7000/tourist?cityname=${this.code}`)
+//         .then(response => {
+//           this.$emit("reloadTouris", response.data)
+//           this.$refs.form.reset();
+//           });
+//       });
+//   });
+// }
 </script>
 
 <style lang="scss" scoped>
@@ -163,6 +219,8 @@ export default class AddTourist extends Vue {
     margin: 0 0 0 auto;
     display: block;
     margin-right: 30px;
+    position: absolute;
+    left: 49px;
   }
 }
 
@@ -174,11 +232,17 @@ export default class AddTourist extends Vue {
 }
 .Provider strong {
   position: relative;
-  top: -6px;
+  top: -5px;
   left: 77px;
   color: #e44a4a;
   font-size: 0.89em;
   width: 184px;
   display: block;
+}
+.loadingArea {
+  position: relative;
+  width: 50px;
+  height: 35px;
+  margin-left: 161px;
 }
 </style>

@@ -71,26 +71,35 @@
                 <button @click="delete_list(site.id, site.cityname)">
                   刪除
                 </button>
-                <button
-                  v-if="active !== site.id"
-                  @click="patch_data(site.名稱, site.地址, site.電話, site.id)"
+                <div
+                  :ref="`loadingAdd${site.id}`"
+                  class="loadingArea"
+                  style="position: relative;"
                 >
-                  修改
-                </button>
-                <button
-                  v-if="active == site.id"
-                  @click="
-                    patch_list(
-                      site.id,
-                      site.cityname,
-                      site.名稱,
-                      site.地址,
-                      site.電話
-                    )
-                  "
-                >
-                  更新
-                </button>
+                  <button
+                    v-if="active !== site.id"
+                    @click="
+                      patch_data(site.名稱, site.地址, site.電話, site.id)
+                    "
+                  >
+                    修改
+                  </button>
+
+                  <button
+                    v-if="active == site.id"
+                    @click="
+                      patch_list(
+                        site.id,
+                        site.cityname,
+                        site.名稱,
+                        site.地址,
+                        site.電話
+                      )
+                    "
+                  >
+                    更新
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -104,6 +113,9 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { ValidationProvider, extend, ValidationObserver } from "vee-validate";
 import { email, required } from "vee-validate/dist/rules";
+import Loading from "vue-loading-overlay"; //loading.vue
+import "vue-loading-overlay/dist/vue-loading.css"; //loading.vue
+import loadingSvg from "~/components/loadingSvg.vue"; //loading.vue
 extend("required", {
   ...required,
   message: "此為必填欄位哦",
@@ -120,7 +132,8 @@ extend("tel", {
 @Component({
   components: {
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
+    loadingSvg
   }
 })
 export default class Card extends Vue {
@@ -136,42 +149,59 @@ export default class Card extends Vue {
   $refs!: {
     form: InstanceType<typeof ValidationObserver>;
   };
-  patch_list(
+  $loading: any;
+  fullPage: boolean = false;
+  mounted() {
+    console.log(this.$refs);
+  }
+  async patch_list(
     idcode: string,
     cityname: string,
     name: string,
     address: string,
     phone: string
   ) {
-    this.$refs.form.validate().then(async success => {
-      if (!success) {
-        return;
-      }
-      const code = encodeURI(cityname);
-      /**修改該筆資料內容 */
-      await this.$axios.patch(`http://localhost:7000/tourist/${idcode}`, {
-        名稱: name,
-        地址: address,
-        電話: phone
-      });
-      await this.$axios
-        /**更新當前頁面內容 */
-        .get(`http://localhost:7000/tourist?cityname=${code}`)
-        .then(response => this.$emit("input", response.data));
-      this.active = "";
-      this.$nextTick(() => {
-        this.$refs.form.reset();
-      });
+    let addcode: any = `loadingAdd${idcode}`;
+    console.log(addcode);
+
+    let loader = this.$loading.show(
+      { container: this.fullPage ? null : this.$refs[addcode][0] },
+      { default: this.$createElement("loadingSvg") }
+    );
+    const success = await this.$refs.form.validate();
+    if (!success) {
+      loader.hide();
+      return;
+    }
+    const code = encodeURI(cityname);
+    /**修改該筆資料內容 */
+    await this.$axios.patch(`http://localhost:7000/tourist/${idcode}`, {
+      名稱: name,
+      地址: address,
+      電話: phone
     });
+    /**更新當前頁面內容 */
+    const response = await this.$axios.get(
+      `http://localhost:7000/tourist?cityname=${code}`
+    );
+    this.$emit("input", response.data);
+    this.active = "";
+    this.$nextTick(() => {
+      this.$refs.form.reset();
+    });
+    loader.hide();
   }
 
   /**刪除旅遊景點 */
   async delete_list(idcode: string, cityname: string) {
+    let loader = this.$loading.show();
     const code = encodeURI(cityname);
     await this.$axios.delete(`http://localhost:7000/tourist/${idcode}`);
-    await this.$axios
-      .get(`http://localhost:7000/tourist?cityname=${code}`)
-      .then(response => this.$emit("input", response.data));
+    const response = await this.$axios.get(
+      `http://localhost:7000/tourist?cityname=${code}`
+    );
+    this.$emit("input", response.data);
+    loader.hide();
   }
 }
 </script>
@@ -239,5 +269,19 @@ export default class Card extends Vue {
   font-size: 0.89em;
   width: 184px;
   display: block;
+}
+.loadingArea {
+  width: 35px;
+  height: 30px;
+  margin-left: 54px;
+  display: inline-block;
+  button {
+    width: 48px;
+    position: relative;
+    left: -51px;
+  }
+}
+.vld-overlay {
+  right: 50px;
 }
 </style>
