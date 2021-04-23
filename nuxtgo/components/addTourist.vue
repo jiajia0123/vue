@@ -10,7 +10,11 @@
               v-slot="{ errors, failed }"
               rules="required"
             >
-              <input type="text" v-model="name" :class="`is-${failed}`" />
+              <input
+                type="text"
+                v-model="newTour.name"
+                :class="`is-${failed}`"
+              />
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
@@ -22,7 +26,7 @@
               v-slot="{ errors, failed }"
               rules="required"
             >
-              <select v-model="area" :class="`is-${failed}`">
+              <select v-model="newTour.area" :class="`is-${failed}`">
                 <option
                   :class="`is-${failed}`"
                   :value="site.name"
@@ -43,7 +47,11 @@
               v-slot="{ errors, failed }"
               rules="required"
             >
-              <input type="text" v-model="address" :class="`is-${failed}`" />
+              <input
+                type="text"
+                v-model="newTour.address"
+                :class="`is-${failed}`"
+              />
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
@@ -54,7 +62,11 @@
               v-slot="{ errors, failed }"
               rules="required|tel"
             >
-              <input type="text" v-model="tel" :class="`is-${failed}`" />
+              <input
+                type="text"
+                v-model="newTour.tel"
+                :class="`is-${failed}`"
+              />
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
@@ -74,16 +86,7 @@ import { email, required } from "vee-validate/dist/rules"; //驗證規則
 import Loading from "vue-loading-overlay"; //loading.vue
 import "vue-loading-overlay/dist/vue-loading.css"; //loading.vue
 import loadingSvg from "~/components/loadingSvg.vue"; //loading.vue
-Vue.use(
-  Loading,
-  {
-    // props
-    color: "blue"
-  },
-  {
-    // slots
-  }
-);
+Vue.use(Loading, { color: "blue" });
 interface AreaOption {
   zip: string;
   name: string;
@@ -115,10 +118,16 @@ export default class AddTourist extends Vue {
 
   /**新增旅遊景點 */
 
-  name: string = "";
-  area: string = "";
-  address: string = "";
-  tel?: number | null = null;
+  newTour = this.addTour();
+
+  addTour() {
+    return {
+      name: "",
+      area: "",
+      address: "",
+      tel: null
+    };
+  }
 
   $refs!: {
     form: InstanceType<typeof ValidationObserver>;
@@ -136,20 +145,18 @@ export default class AddTourist extends Vue {
       loader.hide();
       return;
     }
-    this.$nextTick(() => {
-      this.$refs.form.reset();
-    });
+
+    this.$refs.form.reset();
+
+    const { name, area, address, tel } = this.newTour;
     await this.$axios.post("http://localhost:7000/tourist", {
-      名稱: this.name,
-      cityname: this.area,
-      地址: this.address,
-      電話: this.tel
+      名稱: name,
+      cityname: area,
+      地址: address,
+      電話: tel
     });
 
-    this.name = "";
-    this.area = "";
-    this.address = "";
-    this.tel = null;
+    this.newTour = this.addTour();
 
     const response = await this.$axios.get(
       `http://localhost:7000/tourist?cityname=${this.code}`
@@ -158,6 +165,32 @@ export default class AddTourist extends Vue {
     loader.hide();
   }
 }
+
+// add_list () {
+//   this.$refs.form.validate().then(success => {
+//     if (!success) {
+//       return;
+//     }
+
+//     const { name, cityname, address, tel } = this.formData
+
+//     this.$axios.post("http://localhost:7000/tourist", {
+//       名稱: name,
+//       cityname,
+//       地址: address,
+//       電話: tel
+//     }).then(() => {
+//       this.formData = this.getDefaultFromData()
+
+//       this.$axios
+//         .get(`http://localhost:7000/tourist?cityname=${this.code}`)
+//         .then(response => {
+//           this.$emit("reloadTouris", response.data)
+//           this.$refs.form.reset();
+//           });
+//       });
+//   });
+// }
 </script>
 
 <style lang="scss" scoped>
