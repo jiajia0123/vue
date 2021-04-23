@@ -8,7 +8,7 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "server": "npx json-server ./db/db.json --port 7000",
-    "server-delay": "npx json-server ./db/db.json --port 7000 --delay 500"
+    "server-delay": "npx json-server ./db/db.json --port 7000 --delay 5000"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.1",
