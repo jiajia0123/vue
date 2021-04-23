@@ -19,7 +19,7 @@
                     <ValidationProvider
                       class="Provider"
                       v-slot="{ errors, failed }"
-                      rules="required2"
+                      rules="required"
                       v-if="active == site.id"
                     >
                       <input
@@ -38,7 +38,7 @@
                     <ValidationProvider
                       class="Provider"
                       v-slot="{ errors, failed }"
-                      rules="required2"
+                      rules="required"
                       v-if="active == site.id"
                     >
                       <input
@@ -56,7 +56,7 @@
                     <ValidationProvider
                       class="Provider"
                       v-slot="{ errors, failed }"
-                      rules="required2|tel"
+                      rules="required|tel"
                       v-if="active == site.id"
                     >
                       <input
@@ -104,13 +104,8 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { ValidationProvider, extend, ValidationObserver } from "vee-validate";
 import { email, required } from "vee-validate/dist/rules";
-extend("required2", {
-  validate(value) {
-    return {
-      required: true,
-      valid: ["", null, undefined].indexOf(value) == -1
-    };
-  },
+extend("required", {
+  ...required,
   message: "此為必填欄位哦",
   computesRequired: true
 });
