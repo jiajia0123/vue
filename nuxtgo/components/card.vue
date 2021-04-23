@@ -9,6 +9,7 @@
                 <div class="titBig">{{ site.名稱 }}</div>
                 <div class="titsmall">{{ site.cityname }}</div>
               </div>
+
               <div class="section2">
                 <ul>
                   <li class="opentime">
@@ -18,13 +19,13 @@
                     <ValidationProvider
                       class="Provider"
                       v-slot="{ errors, failed }"
-                      rules="required"
+                      rules="required2"
+                      v-if="active == site.id"
                     >
                       <input
                         :class="`is-${failed}`"
-                        v-if="active == site.id"
                         type="text"
-                        v-model="patch_name"
+                        v-model="site.名稱"
                       />
                       <strong>{{ errors[0] }}</strong>
                     </ValidationProvider>
@@ -37,13 +38,13 @@
                     <ValidationProvider
                       class="Provider"
                       v-slot="{ errors, failed }"
-                      rules="required"
+                      rules="required2"
+                      v-if="active == site.id"
                     >
                       <input
                         :class="`is-${failed}`"
-                        v-if="active == site.id"
                         type="text"
-                        v-model="patch_address"
+                        v-model="site.地址"
                       />
                       <strong>{{ errors[0] }}</strong>
                     </ValidationProvider>
@@ -55,13 +56,13 @@
                     <ValidationProvider
                       class="Provider"
                       v-slot="{ errors, failed }"
-                      rules="required|tel"
+                      rules="required2|tel"
+                      v-if="active == site.id"
                     >
                       <input
                         :class="`is-${failed}`"
-                        v-if="active == site.id"
                         type="text"
-                        v-model="patch_phone"
+                        v-model="site.電話"
                       />
                       <strong>{{ errors[0] }}</strong>
                     </ValidationProvider>
@@ -78,7 +79,15 @@
                 </button>
                 <button
                   v-if="active == site.id"
-                  @click="patch_list(site.id, site.cityname)"
+                  @click="
+                    patch_list(
+                      site.id,
+                      site.cityname,
+                      site.名稱,
+                      site.地址,
+                      site.電話
+                    )
+                  "
                 >
                   更新
                 </button>
@@ -95,8 +104,13 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { ValidationProvider, extend, ValidationObserver } from "vee-validate";
 import { email, required } from "vee-validate/dist/rules";
-extend("required", {
-  ...required,
+extend("required2", {
+  validate(value) {
+    return {
+      required: true,
+      valid: ["", null, undefined].indexOf(value) == -1
+    };
+  },
   message: "此為必填欄位哦",
   computesRequired: true
 });
@@ -118,37 +132,35 @@ export default class Card extends Vue {
   @Prop({ type: Array, default: () => [] })
   value?: any[];
 
-  /**修改旅遊景點  */
-  //v-model input
-  patch_name?: string = "";
-  patch_address?: string = "";
-  patch_phone?: string = "";
-
   active: string = "true";
   /**修改按鈕 */
   patch_data(name: string, address: string, phone: string, id: string) {
     this.active = id;
-    this.patch_name = name;
-    this.patch_address = address;
-    this.patch_phone = phone;
   }
   /**更新按鈕 */
   $refs!: {
     form: InstanceType<typeof ValidationObserver>;
   };
-
-  patch_list(idcode: string, cityname: string) {
+  patch_list(
+    idcode: string,
+    cityname: string,
+    name: string,
+    address: string,
+    phone: string
+  ) {
     this.$refs.form.validate().then(async success => {
       if (!success) {
         return;
       }
       const code = encodeURI(cityname);
+      /**修改該筆資料內容 */
       await this.$axios.patch(`http://localhost:7000/tourist/${idcode}`, {
-        名稱: this.patch_name,
-        地址: this.patch_address,
-        電話: this.patch_phone
+        名稱: name,
+        地址: address,
+        電話: phone
       });
       await this.$axios
+        /**更新當前頁面內容 */
         .get(`http://localhost:7000/tourist?cityname=${code}`)
         .then(response => this.$emit("input", response.data));
       this.active = "";
