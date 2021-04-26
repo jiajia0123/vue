@@ -57,10 +57,10 @@ interface AreaOption {
     selectZip,
     addTourist,
     card,
-    testFather
-    // vee,
-    // loading,
-    // loading2
+    testFather,
+    vee,
+    loading,
+    loading2
   },
 
   /**取得郵遞區號陣列districtsCodeArry*/
@@ -110,19 +110,11 @@ export default class HelloWorld extends Vue {
   /**地區名稱(districtsArea)改變，重新渲染資料*/
   @Watch("districtsArea")
   ApiGet() {
-    const instance = this.$axios.create({
-      baseURL: `http://localhost:7000/`
-    })
-
-    instance.get('tourist')
-
     this.$axios
       .get(`http://localhost:7000/tourist?cityname=${this.code}`)
       .then(response => (this.touristDestination = response.data));
   }
-  mounted() {
-    console.log(Object.keys(process.env));
-  }
+
   /**爺孫組件測試 */
   // @ProvideReactive()
   // hago2: string = "5555";
