@@ -34,5 +34,4 @@
 
 - [ ] [feature/axios-instance] 新增一個 axios 實例，baseUrl 為 .vue 檔的 API_URL，並在專案內使用新的 axios 實例呼叫 API
 
-Q1:colelog 錯誤訊息 AAXIOS 自己做的 plugins
-Q2:tel?: number | null = null; 這樣寫可以嗎?
+
