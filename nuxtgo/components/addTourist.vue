@@ -151,7 +151,7 @@ export default class AddTourist extends Vue {
     this.$refs.form.reset()
 
     const { name, area, address, tel } = this.newTour
-    await this.$axios.post('http://localhost:7000/tourist', {
+    await this.$api.post(`/tourist`, {
       名稱: name,
       cityname: area,
       地址: address,
@@ -160,9 +160,7 @@ export default class AddTourist extends Vue {
 
     this.newTour = this.addTour()
 
-    const response = await this.$axios.get(
-      `http://localhost:7000/tourist?cityname=${this.code}`
-    )
+    const response = await this.$api.get(`/tourist?cityname=${this.code}`)
     this.$emit('reloadTouris', response.data)
     loader.hide()
   }

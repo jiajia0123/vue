@@ -76,10 +76,7 @@
                   class="loadingArea"
                   style="position: relative"
                 >
-                  <button
-                    v-if="active !== site.id"
-                    @click="patchData(site.名稱, site.地址, site.電話, site.id)"
-                  >
+                  <button v-if="active !== site.id" @click="patchData(site.id)">
                     修改
                   </button>
 
@@ -139,7 +136,7 @@ export default class Card extends Vue {
 
   active: string = 'true'
   /** 修改按鈕 */
-  patchData(name: string, address: string, phone: string, id: string) {
+  patchData(id: string) {
     this.active = id
   }
 
@@ -175,15 +172,13 @@ export default class Card extends Vue {
     }
     const code = encodeURI(cityname)
     /** 修改該筆資料內容 */
-    await this.$axios.patch(`http://localhost:7000/tourist/${idcode}`, {
+    await this.$api.patch(`/tourist/${idcode}`, {
       名稱: name,
       地址: address,
       電話: phone,
     })
     /** 更新當前頁面內容 */
-    const response = await this.$axios.get(
-      `http://localhost:7000/tourist?cityname=${code}`
-    )
+    const response = await this.$api.get(`/tourist?cityname=${code}`)
     this.$emit('input', response.data)
     this.active = ''
     this.$nextTick(() => {
@@ -196,10 +191,8 @@ export default class Card extends Vue {
   async deleteList(idcode: string, cityname: string) {
     const loader = this.$loading.show()
     const code = encodeURI(cityname)
-    await this.$axios.delete(`http://localhost:7000/tourist/${idcode}`)
-    const response = await this.$axios.get(
-      `http://localhost:7000/tourist?cityname=${code}`
-    )
+    await this.$api.delete(`/tourist/${idcode}`)
+    const response = await this.$api.get(`/tourist?cityname=${code}`)
     this.$emit('input', response.data)
     loader.hide()
   }

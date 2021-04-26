@@ -27,7 +27,7 @@ interface AreaOption {
 export default class SelectZip extends Vue {
   /** 郵遞區號陣列 */
   @Prop({ type: Array, default: () => [] })
-  districtsCodeArry?: AreaOption[]
+  districtsCodeArry!: AreaOption[]
 
   @Prop({ type: [String], default: null })
   value?: string

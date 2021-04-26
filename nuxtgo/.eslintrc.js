@@ -12,7 +12,7 @@ module.exports = {
   plugins: [],
   // add your custom rules here
   rules: {
-    'no-console': 'warn',
+    'no-console': 'off',
     'no-unused-vars': 'warn',
     'no-unused-expressions': 'warn',
     '@typescript-eslint/no-unused-vars': 'warn',

@@ -61,12 +61,15 @@ interface AreaOption {
 
   /** 取得郵遞區號陣列districtsCodeArry */
   /** 取得旅遊景點陣列touristDestination */
-  async asyncData({ $axios }) {
+  async asyncData({ $api }) {
+    // console.log($api)
+    // const instance = $axios.create({
+    //   baseURL: `${process.env.API_URL}`,
+    // })
+
     const cityarea = encodeURI('東區')
-    const res = await $axios.get(
-      `http://localhost:7000/tourist?cityname=${cityarea}`
-    )
-    const res2 = await $axios.get('http://localhost:7000/districts')
+    const res = await $api.get(`/tourist?cityname=${cityarea}`)
+    const res2 = await $api.get(`/districts`)
     return {
       touristDestination: res.data,
       districtsCodeArry: res2.data,
@@ -105,8 +108,8 @@ export default class HelloWorld extends Vue {
   /** 地區名稱(districtsArea)改變，重新渲染資料 */
   @Watch('districtsArea')
   ApiGet() {
-    this.$axios
-      .get(`http://localhost:7000/tourist?cityname=${this.code}`)
+    this.$api
+      .get(`/tourist?cityname=${this.code}`)
       .then((response) => (this.touristDestination = response.data))
   }
 

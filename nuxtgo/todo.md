@@ -30,8 +30,8 @@
 
 - [x] ~~_[feature/component] 將新增表單及各個卡片封裝成 component 並在 index.vue 引入使用。_~~ [2021-04-21]
 
-- [ ] [feature/env] 研究 .env 檔，新增 API_URL=https://localhost:7000/
+- [X] ~~*[feature/env] 研究 .env 檔，新增 API_URL=https://localhost:7000/*~~ [2021-04-26]
 
-- [ ] [feature/axios-instance] 新增一個 axios 實例，baseUrl 為 .vue 檔的 API_URL，並在專案內使用新的 axios 實例呼叫 API
+- [X] ~~*[feature/axios-instance] 新增一個 axios 實例，baseUrl 為 .vue 檔的 API_URL，並在專案內使用新的 axios 實例呼叫 API*~~ [2021-04-26]
 
 
