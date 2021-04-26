@@ -6,13 +6,13 @@
           <div class="add_Tourist_block">
             <span>景點名稱</span>
             <ValidationProvider
-              class="Provider"
               v-slot="{ errors, failed }"
+              class="Provider"
               rules="required"
             >
               <input
-                type="text"
                 v-model="newTour.name"
+                type="text"
                 :class="`is-${failed}`"
               />
               <strong>{{ errors[0] }}</strong>
@@ -22,16 +22,16 @@
             <span>行政區域</span>
 
             <ValidationProvider
-              class="Provider"
               v-slot="{ errors, failed }"
+              class="Provider"
               rules="required"
             >
               <select v-model="newTour.area" :class="`is-${failed}`">
                 <option
-                  :class="`is-${failed}`"
-                  :value="site.name"
                   v-for="site in districtsCodeArry"
                   :key="site.zip"
+                  :class="`is-${failed}`"
+                  :value="site.name"
                 >
                   {{ site.name }}
                 </option>
@@ -43,13 +43,13 @@
             <span>地址</span>
 
             <ValidationProvider
-              class="Provider"
               v-slot="{ errors, failed }"
+              class="Provider"
               rules="required"
             >
               <input
-                type="text"
                 v-model="newTour.address"
+                type="text"
                 :class="`is-${failed}`"
               />
               <strong>{{ errors[0] }}</strong>
@@ -58,20 +58,20 @@
           <div class="add_Tourist_block">
             <span>電話</span>
             <ValidationProvider
-              class="Provider"
               v-slot="{ errors, failed }"
+              class="Provider"
               rules="required|tel"
             >
               <input
-                type="text"
                 v-model="newTour.tel"
+                type="text"
                 :class="`is-${failed}`"
               />
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
-          <div ref="loadingAdd" class="loadingArea" style="position: relative;">
-            <button @click="add_list">新增</button>
+          <div ref="loadingAdd" class="loadingArea" style="position: relative">
+            <button @click="addList">新增</button>
           </div>
         </div>
       </ValidationObserver>
@@ -80,89 +80,91 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import { ValidationProvider, extend, ValidationObserver } from "vee-validate"; //驗證規則
-import { email, required } from "vee-validate/dist/rules"; //驗證規則
-import Loading from "vue-loading-overlay"; //loading.vue
-import "vue-loading-overlay/dist/vue-loading.css"; //loading.vue
-import loadingSvg from "~/components/loadingSvg.vue"; //loading.vue
-Vue.use(Loading, { color: "blue" });
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { ValidationProvider, extend, ValidationObserver } from 'vee-validate' // 驗證規則
+import { required } from 'vee-validate/dist/rules' // 驗證規則
+import Loading from 'vue-loading-overlay' // loading.vue
+import 'vue-loading-overlay/dist/vue-loading.css' // loading.vue
+import loadingSvg from '~/components/loadingSvg.vue' // loading.vue
+Vue.use(Loading, { color: 'blue' })
 interface AreaOption {
-  zip: string;
-  name: string;
+  zip: string
+  name: string
 }
-extend("required", {
+extend('required', {
   ...required,
-  message: "此為必填欄位哦",
-  computesRequired: true
-});
+  message: '此為必填欄位哦',
+  computesRequired: true,
+})
 
-extend("tel", {
-  validate: value => {
-    return value.length > 5;
+extend('tel', {
+  validate: (value) => {
+    return value.length > 5
   },
-  message: "你的電話長度過短"
-});
+  message: '你的電話長度過短',
+})
 @Component({
   components: {
     ValidationProvider,
     ValidationObserver,
-    loadingSvg
-  }
+    loadingSvg,
+  },
 })
 export default class AddTourist extends Vue {
   @Prop({ type: Array, default: () => [] })
-  districtsCodeArry!: AreaOption[];
+  districtsCodeArry!: AreaOption[]
+
   @Prop({ type: String, default: null })
-  code?: string;
+  code?: string
 
-  /**新增旅遊景點 */
+  /** 新增旅遊景點 */
 
-  newTour = this.addTour();
+  newTour = this.addTour()
 
   addTour() {
     return {
-      name: "",
-      area: "",
-      address: "",
-      tel: null
-    };
+      name: '',
+      area: '',
+      address: '',
+      tel: null,
+    }
   }
 
   $refs!: {
-    form: InstanceType<typeof ValidationObserver>;
-    loadingAdd: InstanceType<typeof ValidationObserver>;
-  };
-  $loading: any;
-  fullPage: boolean = false;
-  async add_list() {
-    let loader = this.$loading.show(
+    form: InstanceType<typeof ValidationObserver>
+    loadingAdd: InstanceType<typeof ValidationObserver>
+  }
+
+  $loading: any
+  fullPage: boolean = false
+  async addList() {
+    const loader = this.$loading.show(
       { container: this.fullPage ? null : this.$refs.loadingAdd },
-      { default: this.$createElement("loadingSvg") }
-    );
-    const success = await this.$refs.form.validate();
+      { default: this.$createElement('loadingSvg') }
+    )
+    const success = await this.$refs.form.validate()
     if (!success) {
-      loader.hide();
-      return;
+      loader.hide()
+      return
     }
 
-    this.$refs.form.reset();
+    this.$refs.form.reset()
 
-    const { name, area, address, tel } = this.newTour;
-    await this.$axios.post("http://localhost:7000/tourist", {
+    const { name, area, address, tel } = this.newTour
+    await this.$axios.post('http://localhost:7000/tourist', {
       名稱: name,
       cityname: area,
       地址: address,
-      電話: tel
-    });
+      電話: tel,
+    })
 
-    this.newTour = this.addTour();
+    this.newTour = this.addTour()
 
     const response = await this.$axios.get(
       `http://localhost:7000/tourist?cityname=${this.code}`
-    );
-    this.$emit("reloadTouris", response.data);
-    loader.hide();
+    )
+    this.$emit('reloadTouris', response.data)
+    loader.hide()
   }
 }
 

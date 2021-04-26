@@ -15,11 +15,15 @@
             > -->
 
             <ValidationProvider
-              class="Provider"
               v-slot="{ errors, failed }"
+              class="Provider"
               rules="required"
             >
-              <input type="text" v-model="formData.name" :class="`is-${failed}`" />
+              <input
+                v-model="formData.name"
+                type="text"
+                :class="`is-${failed}`"
+              />
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
@@ -28,16 +32,16 @@
             <span>行政區域</span>
 
             <ValidationProvider
-              class="Provider"
               v-slot="{ errors, failed }"
+              class="Provider"
               rules="required"
             >
               <select v-model="formData.cityname" :class="`is-${failed}`">
                 <option
-                  :class="`is-${failed}`"
-                  :value="site.name"
                   v-for="site in districtsCodeArry"
                   :key="site.zip"
+                  :class="`is-${failed}`"
+                  :value="site.name"
                 >
                   {{ site.name }}
                 </option>
@@ -50,11 +54,15 @@
             <span>地址</span>
 
             <ValidationProvider
-              class="Provider"
               v-slot="{ errors, failed }"
+              class="Provider"
               rules="required"
             >
-              <input type="text" v-model="formData.address" :class="`is-${failed}`" />
+              <input
+                v-model="formData.address"
+                type="text"
+                :class="`is-${failed}`"
+              />
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
@@ -62,15 +70,19 @@
           <div class="add_Tourist_block">
             <span>電話</span>
             <ValidationProvider
-              class="Provider"
               v-slot="{ errors, failed }"
+              class="Provider"
               rules="required|tel"
             >
-              <input type="text" v-model="formData.tel" :class="`is-${failed}`" />
+              <input
+                v-model="formData.tel"
+                type="text"
+                :class="`is-${failed}`"
+              />
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
-          <button @click="add_list">新增</button>
+          <button @click="addList">新增</button>
         </div>
       </ValidationObserver>
     </div>
@@ -78,43 +90,43 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Ref } from "vue-property-decorator";
-import { ValidationProvider, extend, ValidationObserver } from "vee-validate";
-import { email, required } from "vee-validate/dist/rules";
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { ValidationProvider, extend, ValidationObserver } from 'vee-validate'
+import { required } from 'vee-validate/dist/rules'
 
 interface AreaOption {
-  zip: string;
-  name: string;
+  zip: string
+  name: string
 }
 
-extend("required", {
+extend('required', {
   ...required,
-  message: "此為必填欄位哦",
-  computesRequired: true
-});
+  message: '此為必填欄位哦',
+  computesRequired: true,
+})
 
-extend("tel", {
-  validate: value => {
-    return value.length > 5;
+extend('tel', {
+  validate: (value) => {
+    return value.length > 5
   },
-  message: "你的電話長度過短"
-});
+  message: '你的電話長度過短',
+})
 @Component({
   components: {
     ValidationProvider,
-    ValidationObserver
-  }
+    ValidationObserver,
+  },
 })
 export default class AddTourist extends Vue {
   $refs!: {
-    form: InstanceType<typeof ValidationObserver>;
-  };
+    form: InstanceType<typeof ValidationObserver>
+  }
 
-  @Prop({ type: Array, default: () =>  [] })
-  readonly districtsCodeArry!: AreaOption[];
+  @Prop({ type: Array, default: () => [] })
+  readonly districtsCodeArry!: AreaOption[]
 
   @Prop({ type: String, default: null })
-  readonly code!: string;
+  readonly code!: string
 
   formData = this.getDefaultFromData()
 
@@ -124,7 +136,7 @@ export default class AddTourist extends Vue {
       cityname: '',
       address: '',
       start: '',
-      tel: null
+      tel: null,
     }
   }
 
@@ -154,29 +166,30 @@ export default class AddTourist extends Vue {
   //   });
   // }
 
-  async add_list() {
+  async addList() {
     const isValid = await this.$refs.form.validate()
 
     if (!isValid) {
-      return;
+      return
     }
 
     const { name, cityname, address, tel } = this.formData
 
-    await this.$axios.post("http://localhost:7000/tourist", {
+    await this.$axios.post('http://localhost:7000/tourist', {
       名稱: name,
       cityname,
       地址: address,
-      電話: tel
+      電話: tel,
     })
 
     this.formData = this.getDefaultFromData()
 
-    const response = await this.$axios
-      .get(`http://localhost:7000/tourist?cityname=${this.code}`)
+    const response = await this.$axios.get(
+      `http://localhost:7000/tourist?cityname=${this.code}`
+    )
 
-    this.$emit("reloadTouris", response.data)
-    this.$refs.form.reset();
+    this.$emit('reloadTouris', response.data)
+    this.$refs.form.reset()
   }
 }
 </script>

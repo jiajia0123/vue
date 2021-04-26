@@ -3,12 +3,15 @@
     <!-- <vee />測試vee表單驗證 -->
     <!-- <loading /> 測試loading方法1
      <loading2 />測試loading方法2 -->
-    <selectZip :districtsCodeArry="districtsCodeArry" v-model="districtsZip" />
+    <selectZip
+      v-model="districtsZip"
+      :districts-code-arry="districtsCodeArry"
+    />
 
     <addTourist
-      @reloadTouris="reloadTouris"
       :code="code"
-      :districtsCodeArry="districtsCodeArry"
+      :districts-code-arry="districtsCodeArry"
+      @reloadTouris="reloadTouris"
     />
 
     <h2 class="area_title">{{ districtsArea }}</h2>
@@ -32,24 +35,17 @@
 </template>
 
 <script lang="ts">
-import {
-  Component,
-  Prop,
-  Vue,
-  Watch,
-  Provide,
-  ProvideReactive
-} from "vue-property-decorator";
-import selectZip from "~/components/selectZip.vue";
-import addTourist from "~/components/addTourist.vue";
-import card from "~/components/card.vue";
-import testFather from "~/components/testFather.vue";
-import vee from "~/components/vee.vue";
-import loading from "~/components/loading.vue";
-import loading2 from "~/components/loading2.vue";
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import selectZip from '~/components/selectZip.vue'
+import addTourist from '~/components/addTourist.vue'
+import card from '~/components/card.vue'
+import testFather from '~/components/testFather.vue'
+import vee from '~/components/vee.vue'
+import loading from '~/components/loading.vue'
+import loading2 from '~/components/loading2.vue'
 interface AreaOption {
-  zip: string;
-  name: string;
+  zip: string
+  name: string
 }
 
 @Component({
@@ -60,62 +56,61 @@ interface AreaOption {
     testFather,
     vee,
     loading,
-    loading2
+    loading2,
   },
 
-  /**取得郵遞區號陣列districtsCodeArry*/
-  /**取得旅遊景點陣列touristDestination*/
+  /** 取得郵遞區號陣列districtsCodeArry */
+  /** 取得旅遊景點陣列touristDestination */
   async asyncData({ $axios }) {
-    console.log("你好嗎");
-    const cityarea = encodeURI("東區");
+    const cityarea = encodeURI('東區')
     const res = await $axios.get(
       `http://localhost:7000/tourist?cityname=${cityarea}`
-    );
-    const res2 = await $axios.get("http://localhost:7000/districts");
+    )
+    const res2 = await $axios.get('http://localhost:7000/districts')
     return {
       touristDestination: res.data,
-      districtsCodeArry: res2.data
-    };
-  }
+      districtsCodeArry: res2.data,
+    }
+  },
 })
 export default class HelloWorld extends Vue {
-  /**郵遞區號陣列 */
-  districtsCodeArry: AreaOption[] = [];
+  /** 郵遞區號陣列 */
+  districtsCodeArry: AreaOption[] = []
 
-  /**旅遊景點初始陣列 */
-  touristDestination: any[] = [];
+  /** 旅遊景點初始陣列 */
+  touristDestination: any[] = []
 
-  /*從子組件發來的事件->更新旅遊景點 */
+  /* 從子組件發來的事件->更新旅遊景點 */
   reloadTouris(val: any) {
-    this.touristDestination = val;
+    this.touristDestination = val
   }
 
-  /**郵遞區號(綁定v-model) */
-  districtsZip: string = "401";
+  /** 郵遞區號(綁定v-model) */
+  districtsZip: string = '401'
 
-  /**郵遞區號所對應的地區名稱*/
+  /** 郵遞區號所對應的地區名稱 */
   get districtsArea(): string {
     return (
-      this.districtsCodeArry.find(item => {
-        return item.zip === this.districtsZip;
-      })?.name || "東區"
-    );
+      this.districtsCodeArry.find((item) => {
+        return item.zip === this.districtsZip
+      })?.name || '東區'
+    )
   }
 
-  /**地區名稱轉成encodeURI */
+  /** 地區名稱轉成encodeURI */
   get code(): string {
-    return encodeURI(this.districtsArea);
+    return encodeURI(this.districtsArea)
   }
 
-  /**地區名稱(districtsArea)改變，重新渲染資料*/
-  @Watch("districtsArea")
+  /** 地區名稱(districtsArea)改變，重新渲染資料 */
+  @Watch('districtsArea')
   ApiGet() {
     this.$axios
       .get(`http://localhost:7000/tourist?cityname=${this.code}`)
-      .then(response => (this.touristDestination = response.data));
+      .then((response) => (this.touristDestination = response.data))
   }
 
-  /**爺孫組件測試 */
+  /** 爺孫組件測試 */
   // @ProvideReactive()
   // hago2: string = "5555";
 }
@@ -125,7 +120,7 @@ export default class HelloWorld extends Vue {
 html,
 body {
   padding: 0;
-  font-family: "微軟正黑體";
+  font-family: '微軟正黑體';
 }
 
 .area_title {

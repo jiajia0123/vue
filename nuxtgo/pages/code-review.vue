@@ -3,7 +3,7 @@
     <div class="banner">
       <h1 class="bigtitle">台中景點資訊-Vue</h1>
       <select id="sel" v-model="nowArea">
-        <option :value="site.zip" v-for="site in areaOptions" :key="site.zip">
+        <option v-for="site in areaOptions" :key="site.zip" :value="site.zip">
           {{ site.name }}
         </option>
       </select>
@@ -13,7 +13,7 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-md-6" v-for="site in info2" :key="site.名稱">
+        <div v-for="site in info2" :key="site.名稱" class="col-md-6">
           <div class="bigaree">
             <div class="section1">
               <div class="titBig">{{ site.名稱 }}</div>
@@ -43,62 +43,62 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue, Watch } from 'vue-property-decorator'
 
 /** 地區選項 */
 interface AreaOption {
   /** 郵遞區號 */
-  zip: string;
+  zip: string
   /** 地區名稱 */
-  name: string;
+  name: string
 }
 
 @Component({
-  //asyncData打API
+  // asyncData打API
   async asyncData({ $axios }) {
-    const res = await $axios("http://localhost:7000/data0");
+    const res = await $axios('http://localhost:7000/data0')
     const res2 = await $axios.get(
-      "https://jiajia0123.github.io/mywork/api2.json"
-    );
+      'https://jiajia0123.github.io/mywork/api2.json'
+    )
     return {
       info: res.data,
       areaOptions: res2.data[10].districts,
-      nowArea: res2.data[10].districts[0].zip
-    };
-  }
+      nowArea: res2.data[10].districts[0].zip,
+    }
+  },
 })
 export default class HelloWorld22 extends Vue {
   /** 所選擇的地區 */
-  nowArea: string = "";
+  nowArea: string = ''
 
   /** 地區選單 - 選項列表 */
-  areaOptions: AreaOption[] = [];
+  areaOptions: AreaOption[] = []
 
-  info: any[] = [];
+  info: any[] = []
 
   get areaLabel() {
-    return this.selectedAreaItem?.name;
+    return this.selectedAreaItem?.name
   }
 
   get selectedAreaItem() {
-    return this.areaOptions.find(option => option.zip === this.nowArea);
+    return this.areaOptions.find((option) => option.zip === this.nowArea)
   }
 
   get info2() {
-    const name = this.selectedAreaItem?.name;
-    return name ? this.info.filter(item => item.cityname == name) : [];
+    const name = this.selectedAreaItem?.name
+    return name ? this.info.filter((item) => item.cityname === name) : []
   }
 
-  //watch
-  @Watch("nowArea")
+  // watch
+  @Watch('nowArea')
   ApiGet() {
     this.$axios
       .get(
-        "http://localhost:7000/data0" //,{params: { name: "234"}}
+        'http://localhost:7000/data0' //, {params: { name: "234"}}
       )
-      .then(response => {
-        this.info = response.data;
-      });
+      .then((response) => {
+        this.info = response.data
+      })
   }
 }
 </script>

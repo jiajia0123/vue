@@ -2,8 +2,8 @@
   <div id="app">
     <div class="banner">
       <h1 class="bigtitle">台中景點資訊-Vue</h1>
-      <select name="" id="sel" v-model="nowarea">
-        <option :value="site.name" v-for="site in infop" :key="site.zip">
+      <select id="sel" v-model="nowarea" name="">
+        <option v-for="site in infop" :key="site.zip" :value="site.name">
           {{ site.name }}
         </option>
       </select>
@@ -12,7 +12,7 @@
     <h2 class="area_title">{{ nowarea }}</h2>
     <div class="container">
       <div class="row">
-        <div class="col-md-6" v-for="site in info2" :key="site.名稱">
+        <div v-for="site in info2" :key="site.名稱" class="col-md-6">
           <div class="bigaree">
             <div class="section1">
               <div class="titBig">{{ site.名稱 }}</div>
@@ -44,49 +44,48 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
+import Vue from 'vue'
+import axios from 'axios'
 export default Vue.extend({
+  async asyncData({ $AAxios }) {
+    const res = await $AAxios('http://localhost:7000/data0')
+    const res2 = await axios.get(
+      'https://jiajia0123.github.io/mywork/api2.json'
+    )
+    return {
+      info: res.data,
+      infop: res2.data[10].districts,
+    }
+  },
   data() {
     return {
-      nowarea: "東區"
-    };
+      nowarea: '東區',
+    }
+  },
+  computed: {
+    info2() {
+      const arr = this.info.filter((item) => {
+        return item.cityname === this.nowarea
+      })
+      return arr
+    },
   },
   watch: {
     nowarea() {
       axios
         .get(
-          "http://localhost:7000/data0"
+          'http://localhost:7000/data0'
           //         ,{params: { name: "234"
           // }}
         )
-        .then(response => (this.info = response.data));
-    }
+        .then((response) => (this.info = response.data))
+    },
   },
-  async asyncData({ $AAxios }) {
-    console.log("你好嗎");
-    const res = await $AAxios("http://localhost:7000/data0");
-    const res2 = await axios.get(
-      "https://jiajia0123.github.io/mywork/api2.json"
-    );
-    return {
-      info: res.data,
-      infop: res2.data[10].districts
-    };
-  },
-  computed: {
-    info2() {
-      let arr = this.info.filter(item => {
-        return item.cityname == this.nowarea;
-      });
-      return arr;
-    }
-  },
-  async mounted() {
-    this.$AAxios_POST("http://localhost:7000/data0");
+  mounted() {
+    this.$AAxios_POST('http://localhost:7000/data0')
 
     // console.log( $AAxios("http://localhost:7000/data0"));
-  }
+  },
   // mounted() {
   //   axios
   //     .get("https://jiajia0123.github.io/mywork/api.json")
@@ -103,7 +102,7 @@ export default Vue.extend({
   //       console.log(error);
   //     });
   // }
-});
+})
 </script>
 
 <style lang="scss" scoped>

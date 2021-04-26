@@ -3,7 +3,7 @@
     <ValidationObserver ref="form">
       <div class="container">
         <div class="row">
-          <div class="col-md-6" v-for="site in value" :key="site.id">
+          <div v-for="site in value" :key="site.id" class="col-md-6">
             <div class="bigaree">
               <div class="section1">
                 <div class="titBig">{{ site.名稱 }}</div>
@@ -17,15 +17,15 @@
                       {{ site.名稱 }}
                     </div>
                     <ValidationProvider
-                      class="Provider"
-                      v-slot="{ errors, failed }"
-                      rules="required"
                       v-if="active == site.id"
+                      v-slot="{ errors, failed }"
+                      class="Provider"
+                      rules="required"
                     >
                       <input
+                        v-model="site.名稱"
                         :class="`is-${failed}`"
                         type="text"
-                        v-model="site.名稱"
                       />
                       <strong>{{ errors[0] }}</strong>
                     </ValidationProvider>
@@ -36,15 +36,15 @@
                       {{ site.地址 }}
                     </div>
                     <ValidationProvider
-                      class="Provider"
-                      v-slot="{ errors, failed }"
-                      rules="required"
                       v-if="active == site.id"
+                      v-slot="{ errors, failed }"
+                      class="Provider"
+                      rules="required"
                     >
                       <input
+                        v-model="site.地址"
                         :class="`is-${failed}`"
                         type="text"
-                        v-model="site.地址"
                       />
                       <strong>{{ errors[0] }}</strong>
                     </ValidationProvider>
@@ -54,33 +54,31 @@
                       {{ site.電話 }}
                     </div>
                     <ValidationProvider
-                      class="Provider"
-                      v-slot="{ errors, failed }"
-                      rules="required|tel"
                       v-if="active == site.id"
+                      v-slot="{ errors, failed }"
+                      class="Provider"
+                      rules="required|tel"
                     >
                       <input
+                        v-model="site.電話"
                         :class="`is-${failed}`"
                         type="text"
-                        v-model="site.電話"
                       />
                       <strong>{{ errors[0] }}</strong>
                     </ValidationProvider>
                   </li>
                 </ul>
-                <button @click="delete_list(site.id, site.cityname)">
+                <button @click="deleteList(site.id, site.cityname)">
                   刪除
                 </button>
                 <div
                   :ref="`loadingAdd${site.id}`"
                   class="loadingArea"
-                  style="position: relative;"
+                  style="position: relative"
                 >
                   <button
                     v-if="active !== site.id"
-                    @click="
-                      patch_data(site.名稱, site.地址, site.電話, site.id)
-                    "
+                    @click="patchData(site.名稱, site.地址, site.電話, site.id)"
                   >
                     修改
                   </button>
@@ -88,7 +86,7 @@
                   <button
                     v-if="active == site.id"
                     @click="
-                      patch_list(
+                      patchList(
                         site.id,
                         site.cityname,
                         site.名稱,
@@ -110,98 +108,100 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
-import { ValidationProvider, extend, ValidationObserver } from "vee-validate";
-import { email, required } from "vee-validate/dist/rules";
-import Loading from "vue-loading-overlay"; //loading.vue
-import "vue-loading-overlay/dist/vue-loading.css"; //loading.vue
-import loadingSvg from "~/components/loadingSvg.vue"; //loading.vue
-extend("required", {
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { ValidationProvider, extend, ValidationObserver } from 'vee-validate'
+import { required } from 'vee-validate/dist/rules'
+import 'vue-loading-overlay/dist/vue-loading.css' // loading.vue
+import loadingSvg from '~/components/loadingSvg.vue' // loading.vue
+extend('required', {
   ...required,
-  message: "此為必填欄位哦",
-  computesRequired: true
-});
+  message: '此為必填欄位哦',
+  computesRequired: true,
+})
 
-extend("tel", {
-  validate: value => {
-    return value.length > 5;
+extend('tel', {
+  validate: (value) => {
+    return value.length > 5
   },
-  message: "你的電話長度過短"
-});
+  message: '你的電話長度過短',
+})
 
 @Component({
   components: {
     ValidationProvider,
     ValidationObserver,
-    loadingSvg
-  }
+    loadingSvg,
+  },
 })
 export default class Card extends Vue {
   @Prop({ type: Array, default: () => [] })
-  value?: any[];
+  value!: any[]
 
-  active: string = "true";
-  /**修改按鈕 */
-  patch_data(name: string, address: string, phone: string, id: string) {
-    this.active = id;
+  active: string = 'true'
+  /** 修改按鈕 */
+  patchData(name: string, address: string, phone: string, id: string) {
+    this.active = id
   }
-  /**更新按鈕 */
+
+  /** 更新按鈕 */
   $refs!: {
-    form: InstanceType<typeof ValidationObserver>;
-  };
-  $loading: any;
-  fullPage: boolean = false;
-  mounted() {
-    console.log(this.$refs);
+    form: InstanceType<typeof ValidationObserver>
   }
-  async patch_list(
+
+  $loading: any
+  fullPage: boolean = false
+  mounted() {
+    console.log(this.$refs)
+  }
+
+  async patchList(
     idcode: string,
     cityname: string,
     name: string,
     address: string,
     phone: string
   ) {
-    let addcode: any = `loadingAdd${idcode}`;
-    console.log(addcode);
+    const addcode: any = `loadingAdd${idcode}`
+    console.log(addcode)
 
-    let loader = this.$loading.show(
+    const loader = this.$loading.show(
       { container: this.fullPage ? null : this.$refs[addcode][0] },
-      { default: this.$createElement("loadingSvg") }
-    );
-    const success = await this.$refs.form.validate();
+      { default: this.$createElement('loadingSvg') }
+    )
+    const success = await this.$refs.form.validate()
     if (!success) {
-      loader.hide();
-      return;
+      loader.hide()
+      return
     }
-    const code = encodeURI(cityname);
-    /**修改該筆資料內容 */
+    const code = encodeURI(cityname)
+    /** 修改該筆資料內容 */
     await this.$axios.patch(`http://localhost:7000/tourist/${idcode}`, {
       名稱: name,
       地址: address,
-      電話: phone
-    });
-    /**更新當前頁面內容 */
+      電話: phone,
+    })
+    /** 更新當前頁面內容 */
     const response = await this.$axios.get(
       `http://localhost:7000/tourist?cityname=${code}`
-    );
-    this.$emit("input", response.data);
-    this.active = "";
+    )
+    this.$emit('input', response.data)
+    this.active = ''
     this.$nextTick(() => {
-      this.$refs.form.reset();
-    });
-    loader.hide();
+      this.$refs.form.reset()
+    })
+    loader.hide()
   }
 
-  /**刪除旅遊景點 */
-  async delete_list(idcode: string, cityname: string) {
-    let loader = this.$loading.show();
-    const code = encodeURI(cityname);
-    await this.$axios.delete(`http://localhost:7000/tourist/${idcode}`);
+  /** 刪除旅遊景點 */
+  async deleteList(idcode: string, cityname: string) {
+    const loader = this.$loading.show()
+    const code = encodeURI(cityname)
+    await this.$axios.delete(`http://localhost:7000/tourist/${idcode}`)
     const response = await this.$axios.get(
       `http://localhost:7000/tourist?cityname=${code}`
-    );
-    this.$emit("input", response.data);
-    loader.hide();
+    )
+    this.$emit('input', response.data)
+    loader.hide()
   }
 }
 </script>

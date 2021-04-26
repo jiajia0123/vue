@@ -2,8 +2,8 @@
   <div id="app">
     <div class="banner">
       <h1 class="bigtitle">台中景點資訊-Vue</h1>
-      <select name="" id="sel" v-model="nowarea">
-        <option :value="site.name" v-for="site in infop" :key="site.zip">
+      <select id="sel" v-model="nowarea" name="">
+        <option v-for="site in infop" :key="site.zip" :value="site.name">
           {{ site.name }}
         </option>
       </select>
@@ -12,7 +12,7 @@
     <h2 class="area_title">{{ nowarea }}</h2>
     <div class="container">
       <div class="row">
-        <div class="col-md-6" v-for="site in info2" :key="site.名稱">
+        <div v-for="site in info2" :key="site.名稱" class="col-md-6">
           <div class="bigaree">
             <div class="section1">
               <div class="titBig">{{ site.名稱 }}</div>
@@ -44,35 +44,35 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "nuxt-property-decorator";
+import { Component, Vue, Watch } from 'nuxt-property-decorator'
 
 @Component
 export default class IndexPage extends Vue {
   // data
-  nowarea: string = "東區";
-  info: any[] = [];
-  infop: any[] = [];
+  nowarea: string = '東區'
+  info: any[] = []
+  infop: any[] = []
 
   // computed
   get info2(): any[] {
-    return [];
+    return []
   }
 
   // watch
-  @Watch("nowarea")
-  async onNowareaChange(newVal: string) {
-    const res = await this.$axios.get("http://localhost:7000/data0");
-    this.info = res.data;
+  @Watch('nowarea')
+  async onNowareaChange() {
+    const res = await this.$axios.get('http://localhost:7000/data0')
+    this.info = res.data
   }
 
   async mounted() {
-    const res = await this.$axios.get("http://localhost:7000/data0");
+    const res = await this.$axios.get('http://localhost:7000/data0')
     const res2 = await this.$axios.get(
-      "https://jiajia0123.github.io/mywork/api2.json"
-    );
+      'https://jiajia0123.github.io/mywork/api2.json'
+    )
 
-    this.info = res.data;
-    this.infop = res2.data;
+    this.info = res.data
+    this.infop = res2.data
   }
 }
 </script>
