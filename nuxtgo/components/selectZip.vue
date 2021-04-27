@@ -29,9 +29,11 @@ export default class SelectZip extends Vue {
   @Prop({ type: Array, default: () => [] })
   districtsCodeArry!: AreaOption[]
 
+  /** 上層傳來郵遞區號(數字) */
   @Prop({ type: [String], default: null })
-  value?: string
+  value!: string
 
+  /** 發出事件-郵遞區號(數字) */
   emitDistrictsZip(event: any) {
     this.$emit('input', event.target.value)
   }

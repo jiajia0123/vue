@@ -70,9 +70,8 @@
               <strong>{{ errors[0] }}</strong>
             </ValidationProvider>
           </div>
-          <div ref="loadingAdd" class="loadingArea" style="position: relative">
-            <button @click="addList">新增</button>
-          </div>
+
+          <button @click="addList">新增</button>
         </div>
       </ValidationObserver>
     </div>
@@ -81,33 +80,13 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ValidationProvider, extend, ValidationObserver } from 'vee-validate' // 驗證規則
-import { required } from 'vee-validate/dist/rules' // 驗證規則
-import Loading from 'vue-loading-overlay' // loading.vue
-import 'vue-loading-overlay/dist/vue-loading.css' // loading.vue
-import loadingSvg from '~/components/loadingSvg.vue' // loading.vue
-Vue.use(Loading, { color: 'blue' })
-interface AreaOption {
-  zip: string
-  name: string
-}
-extend('required', {
-  ...required,
-  message: '此為必填欄位哦',
-  computesRequired: true,
-})
+import { ValidationProvider, ValidationObserver } from 'vee-validate' // 驗證規則
+import { AreaOption } from '~/@types'
 
-extend('tel', {
-  validate: (value) => {
-    return value.length > 5
-  },
-  message: '你的電話長度過短',
-})
 @Component({
   components: {
     ValidationProvider,
     ValidationObserver,
-    loadingSvg,
   },
 })
 export default class AddTourist extends Vue {
@@ -115,7 +94,7 @@ export default class AddTourist extends Vue {
   districtsCodeArry!: AreaOption[]
 
   @Prop({ type: String, default: null })
-  code?: string
+  code!: string
 
   /** 新增旅遊景點 */
 
@@ -138,10 +117,7 @@ export default class AddTourist extends Vue {
   $loading: any
   fullPage: boolean = false
   async addList() {
-    const loader = this.$loading.show(
-      { container: this.fullPage ? null : this.$refs.loadingAdd },
-      { default: this.$createElement('loadingSvg') }
-    )
+    const loader = this.$loading.show()
     const success = await this.$refs.form.validate()
     if (!success) {
       loader.hide()
@@ -151,6 +127,8 @@ export default class AddTourist extends Vue {
     this.$refs.form.reset()
 
     const { name, area, address, tel } = this.newTour
+    // this.$api.defaults.headers.common.Authorization = '88886666'
+
     await this.$api.post(`/tourist`, {
       名稱: name,
       cityname: area,
@@ -219,8 +197,6 @@ export default class AddTourist extends Vue {
     margin: 0 0 0 auto;
     display: block;
     margin-right: 30px;
-    position: absolute;
-    left: 49px;
   }
 }
 

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- loading時如果要設定在部分區域 -->
     <svg
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"

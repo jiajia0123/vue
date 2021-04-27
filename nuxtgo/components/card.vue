@@ -73,11 +73,13 @@
                 <button @click="deleteList(site.id, site.cityname)">
                   刪除
                 </button>
+                <!-- loading時如果要設定在部分區域 -->
                 <div
                   :ref="`loadingAdd${site.id}`"
                   class="loadingArea"
                   style="position: relative"
                 >
+                  <!-- loading時如果要設定在部分區域 END -->
                   <button v-if="active !== site.id" @click="patchData(site.id)">
                     修改
                   </button>
@@ -108,33 +110,19 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { ValidationProvider, extend, ValidationObserver } from 'vee-validate'
-import { required } from 'vee-validate/dist/rules'
-import 'vue-loading-overlay/dist/vue-loading.css' // loading.vue
-import loadingSvg from '~/components/loadingSvg.vue' // loading.vue
-extend('required', {
-  ...required,
-  message: '此為必填欄位哦',
-  computesRequired: true,
-})
-
-extend('tel', {
-  validate: (value) => {
-    return value.length > 5
-  },
-  message: '你的電話長度過短',
-})
-
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import { touristOption } from '~/@types'
+import LoadingSvg from '~/components/loadingSvg.vue' // loading時如果要設定在部分區域
 @Component({
   components: {
     ValidationProvider,
     ValidationObserver,
-    loadingSvg,
+    LoadingSvg, // loading時如果要設定在部分區域
   },
 })
 export default class Card extends Vue {
   @Prop({ type: Array, default: () => [] })
-  value!: any[]
+  value!: touristOption[]
 
   active: string = 'true'
   /** 修改按鈕 */
@@ -147,6 +135,7 @@ export default class Card extends Vue {
     form: InstanceType<typeof ValidationObserver>
   }
 
+  $notify: any
   $loading: any
   fullPage: boolean = false
 
@@ -157,12 +146,10 @@ export default class Card extends Vue {
     address: string,
     phone: string
   ) {
-    const addcode: any = `loadingAdd${idcode}`
-    console.log(addcode)
-
+    const addcode: string = `loadingAdd${idcode}`
     const loader = this.$loading.show(
-      { container: this.fullPage ? null : this.$refs[addcode][0] },
-      { default: this.$createElement('loadingSvg') }
+      { container: this.fullPage ? null : this.$refs[addcode][0] }, // loading時如果要設定在部分區域
+      { default: this.$createElement('LoadingSvg') } // loading時如果要設定在部分區域
     )
     const success = await this.$refs.form.validate()
     if (!success) {
@@ -170,13 +157,13 @@ export default class Card extends Vue {
       return
     }
     const code = encodeURI(cityname)
-    /** 修改該筆資料內容 */
+    /** API修改該筆資料內容 */
     await this.$api.patch(`/tourist/${idcode}`, {
       名稱: name,
       地址: address,
       電話: phone,
     })
-    /** 更新當前頁面內容 */
+    /** API更新當前頁面內容 */
     const response = await this.$api.get(`/tourist?cityname=${code}`)
     this.$emit('input', response.data)
     this.active = ''

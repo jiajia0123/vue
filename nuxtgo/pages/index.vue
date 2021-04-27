@@ -1,14 +1,14 @@
 <template>
   <div id="app">
-    <!-- <vee />測試vee表單驗證 -->
-    <!-- <loading /> 測試loading方法1
-     <loading2 />測試loading方法2 -->
-    <selectZip
+    <!-- <Vee />測試vee表單驗證 -->
+    <!-- <Loading /> 測試loading方法1
+     <Loading2 />測試loading方法2 -->
+    <SelectZip
       v-model="districtsZip"
       :districts-code-arry="districtsCodeArry"
     />
 
-    <addTourist
+    <AddTourist
       :code="code"
       :districts-code-arry="districtsCodeArry"
       @reloadTouris="reloadTouris"
@@ -16,9 +16,9 @@
 
     <h2 class="area_title">{{ districtsArea }}</h2>
 
-    <card v-model="touristDestination" />
+    <Card v-model="touristDestination" />
 
-    <!-- <div >爺孫組件測試<testFather v-model="districtsZip"/></div> -->
+    <!-- <div >爺孫組件測試<TestFather v-model="districtsZip"/></div> -->
 
     <div class="footer">
       <p>由原始javascrip版本改成Vue框架、axios使用</p>
@@ -36,41 +36,31 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-
-import selectZip from '~/components/selectZip.vue'
-import addTourist from '~/components/addTourist.vue'
-import card from '~/components/card.vue'
-import testFather from '~/components/testFather.vue'
-import vee from '~/components/vee.vue'
-import loading from '~/components/loading.vue'
-import loading2 from '~/components/loading2.vue'
-
-interface AreaOption {
-  zip: string
-  name: string
-}
+import { AreaOption, touristOption } from '~/@types'
+import SelectZip from '~/components/selectZip.vue'
+import AddTourist from '~/components/addTourist.vue'
+import Card from '~/components/card.vue'
+import TestFather from '~/components/testFather.vue'
+import Vee from '~/components/vee.vue'
+import Loading from '~/components/loading.vue'
+import Loading2 from '~/components/loading2.vue'
 
 @Component({
   components: {
-    selectZip,
-    addTourist,
-    card,
-    testFather,
-    vee,
-    loading,
-    loading2,
+    SelectZip,
+    AddTourist,
+    Card,
+    TestFather,
+    Vee,
+    Loading,
+    Loading2,
   },
 
-  /** 取得郵遞區號陣列districtsCodeArry */
-  /** 取得旅遊景點陣列touristDestination */
   async asyncData({ $api }) {
-    // console.log($api)
-    // const instance = $axios.create({
-    //   baseURL: `${process.env.API_URL}`,
-    // })
-
     const cityarea = encodeURI('東區')
+    /** 取得旅遊景點陣列touristDestination */
     const res = await $api.get(`/tourist?cityname=${cityarea}`)
+    /** 取得郵遞區號陣列districtsCodeArry */
     const res2 = await $api.get(`/districts`)
     return {
       touristDestination: res.data,
@@ -83,10 +73,10 @@ export default class HelloWorld extends Vue {
   districtsCodeArry: AreaOption[] = []
 
   /** 旅遊景點初始陣列 */
-  touristDestination: any[] = []
+  touristDestination: touristOption[] = []
 
   /* 從子組件發來的事件->更新旅遊景點 */
-  reloadTouris(val: any) {
+  reloadTouris(val: touristOption[]) {
     this.touristDestination = val
   }
 
@@ -107,12 +97,14 @@ export default class HelloWorld extends Vue {
     return encodeURI(this.districtsArea)
   }
 
+  $loading: any
   /** 地區名稱(districtsArea)改變，重新渲染資料 */
   @Watch('districtsArea')
-  ApiGet() {
-    this.$api
-      .get(`/tourist?cityname=${this.code}`)
-      .then((response) => (this.touristDestination = response.data))
+  async apiGet() {
+    const loader = this.$loading.show()
+    const res = await this.$api.get(`/tourist?cityname=${this.code}`)
+    this.touristDestination = res.data
+    loader.hide()
   }
 
   /** 爺孫組件測試 */

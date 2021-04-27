@@ -1,4 +1,5 @@
 <template>
+  <!-- loading時如果要設定在部分區域 -->
   <div
     ref="formContainer"
     class="area loadingArea"
@@ -16,20 +17,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import Loading from 'vue-loading-overlay'
-import 'vue-loading-overlay/dist/vue-loading.css'
 import loadingSvg from '~/components/loadingSvg.vue'
 
-Vue.use(
-  Loading,
-  {
-    // props
-    color: 'blue',
-  },
-  {
-    // slots
-  }
-)
 // console.log(window.$nuxt);
 @Component({
   components: { loadingSvg },
@@ -39,7 +28,7 @@ export default class Card2 extends Vue {
   submit() {
     const loader = (this as any).$loading.show(
       {
-        container: this.fullPage ? null : this.$refs.formContainer,
+        container: this.fullPage ? null : this.$refs.formContainer, // loading時如果要設定在部分區域
         canCancel: true,
         onCancel: this.onCancel,
         color: '#d20000',
