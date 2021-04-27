@@ -36,4 +36,22 @@
 
 - [ ] [feature/vue-notification] 錯誤提示
 
+- [] 將 component 內的 props 類別宣告方式 ?: 都改成 !:
 
+- [] 參考 https://i18n.nuxtjs.org/ 及 https://kazupon.github.io/vue-i18n/ 將專案改成中英模式，並可切換語系
+
+- [] 在專案內新增 .env.example 檔案作為 .env 的範本
+
+- [] 將 loading 變成全螢幕方式使用，並將 vue-loading-overlay 封裝成 plugin，在每個 component 內可以直接使用
+
+- [] 所有呼叫 API 的行為都需要顯示 loading 畫面
+
+- [] 將所有 interface 或 type 型別放進專案根目錄內的 @types 資料夾內集中管理
+
+- [] 專案內所有變數及方法名稱改成 "小駝峰式命名法"
+
+- [] 將 vee-validate 封裝成 plugin，並統一管理驗證規則
+
+- [] 代碼整理，並移除不必要的檔案及代碼
+
+- [] import component 時名稱使用 "大駝峰式命名法"
