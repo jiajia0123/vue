@@ -36,6 +36,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
+
 import selectZip from '~/components/selectZip.vue'
 import addTourist from '~/components/addTourist.vue'
 import card from '~/components/card.vue'
@@ -43,6 +44,7 @@ import testFather from '~/components/testFather.vue'
 import vee from '~/components/vee.vue'
 import loading from '~/components/loading.vue'
 import loading2 from '~/components/loading2.vue'
+
 interface AreaOption {
   zip: string
   name: string

@@ -2,6 +2,8 @@
   <div>
     <ValidationObserver ref="form">
       <div class="container">
+        <button @click="error">error</button>
+        <button @click="success">success</button>
         <div class="row">
           <div v-for="site in value" :key="site.id" class="col-md-6">
             <div class="bigaree">
@@ -147,9 +149,6 @@ export default class Card extends Vue {
 
   $loading: any
   fullPage: boolean = false
-  mounted() {
-    console.log(this.$refs)
-  }
 
   async patchList(
     idcode: string,
@@ -195,6 +194,16 @@ export default class Card extends Vue {
     const response = await this.$api.get(`/tourist?cityname=${code}`)
     this.$emit('input', response.data)
     loader.hide()
+  }
+
+  /** 錯誤按鈕 */
+  error() {
+    this.$notify({ group: 'error', type: 'error', text: '失敗了' })
+  }
+
+  /** 成功按鈕 */
+  success() {
+    this.$notify({ group: 'success', type: 'success', text: '成功了' })
   }
 }
 </script>

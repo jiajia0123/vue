@@ -34,6 +34,6 @@
 
 - [X] ~~*[feature/axios-instance] 新增一個 axios 實例，baseUrl 為 .vue 檔的 API_URL，並在專案內使用新的 axios 實例呼叫 API*~~ [2021-04-26]
 
-- [ ] [feature/vue-notification] 錯誤提示
+- [ ] [feature/vue-notification] http://vue-notification.yev.io/錯誤提示
 
 
