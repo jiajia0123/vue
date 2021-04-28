@@ -138,8 +138,6 @@ export default class Card extends Vue {
     form: InstanceType<typeof ValidationObserver>
   }
 
-  $notify: any
-  $loading: any
   fullPage: boolean = false
 
   async patchList(
@@ -172,6 +170,11 @@ export default class Card extends Vue {
     this.active = ''
     this.$nextTick(() => {
       this.$refs.form.reset()
+    })
+    this.$notify({
+      group: 'success',
+      type: 'success',
+      text: `更新成功`,
     })
     loader.hide()
   }

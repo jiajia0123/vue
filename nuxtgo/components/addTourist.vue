@@ -114,11 +114,11 @@ export default class AddTourist extends Vue {
     loadingAdd: InstanceType<typeof ValidationObserver>
   }
 
-  $loading: any
   fullPage: boolean = false
   async addList() {
     const loader = this.$loading.show()
-    const success = await this.$refs.form.validate()
+    const success = await this.$refs.form.validate() // 組件內都要通過驗證
+    // 如果驗證失敗就..
     if (!success) {
       loader.hide()
       return
@@ -139,8 +139,13 @@ export default class AddTourist extends Vue {
     this.newTour = this.addTour()
 
     const response = await this.$api.get(`/tourist?cityname=${this.code}`)
+    this.$notify({
+      group: 'success',
+      type: 'success',
+      text: `${name}景點新增成功`,
+    }) // 右下提示視窗
     this.$emit('reloadTouris', response.data)
-    loader.hide()
+    loader.hide() // loading解除
   }
 }
 

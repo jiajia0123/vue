@@ -56,8 +56,12 @@
 
 - [X] ~~*import component 時名稱使用 "大駝峰式命名法"*~~ [2021-04-27]
 
+- [X] ~~*iinterceptors攔截器"*~~ [2021-04-28]
 
-什麼意思
+
+
+
+1.iso什麼意思
 {
         code: 'zw-tw',
         iso: 'zw-tw22',
@@ -65,10 +69,16 @@
       },
 
 
-錯誤
+2.錯誤
 .filter((i) => i.code !== this.$i18n.locale)
 
 
 
 
-$tc
+3.$tc
+{{ $tc('re', 2) }}
+
+4.interfcre type差別
+
+
+5.錯誤 成功 提示訊息

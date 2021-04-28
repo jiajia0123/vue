@@ -52,7 +52,7 @@ export default {
       {
         code: 'en',
         iso: 'en',
-        name: '英文版',
+        name: 'English',
       },
       {
         code: 'zw',

@@ -16,7 +16,7 @@
       "~/*": ["./*"],
       "@/*": ["./*"]
     },
-    "types": ["@nuxt/types", "@types/node", "@nuxtjs/axios","nuxt-i18n"]
+    "types": ["@nuxt/types", "@types/node", "@nuxtjs/axios","nuxt-i18n","vue-notification"]
   },
   "exclude": ["node_modules", ".nuxt", "dist"]
 }

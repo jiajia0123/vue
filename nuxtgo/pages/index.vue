@@ -48,6 +48,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
+import { LocaleObject } from 'nuxt-i18n/types'
 import { AreaOption, touristOption } from '~/@types'
 import SelectZip from '~/components/selectZip.vue'
 import AddTourist from '~/components/addTourist.vue'
@@ -106,7 +107,9 @@ export default class HelloWorld extends Vue {
 
   /** 中英文切換 */
   get availableLocales() {
-    return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
+    return (this.$i18n.locales as LocaleObject[]).filter(
+      (i) => i.code !== this.$i18n.locale
+    )
   }
 
   /** 地區名稱轉成encodeURI */
@@ -114,7 +117,6 @@ export default class HelloWorld extends Vue {
     return encodeURI(this.districtsArea)
   }
 
-  $loading: any
   /** 地區名稱(districtsArea)改變，重新渲染資料 */
   @Watch('districtsArea')
   async apiGet() {
@@ -127,6 +129,7 @@ export default class HelloWorld extends Vue {
   moveAbout() {
     this.$router.push(this.localePath('/about'))
   }
+
   /** 爺孫組件測試 */
   // @ProvideReactive()
   // hago2: string = "5555";
