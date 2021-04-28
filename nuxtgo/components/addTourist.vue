@@ -4,7 +4,7 @@
       <ValidationObserver ref="form">
         <div class="add_Tourist">
           <div class="add_Tourist_block">
-            <span>景點名稱</span>
+            <span>{{ $t('tName') }}</span>
             <ValidationProvider
               v-slot="{ errors, failed }"
               class="Provider"
@@ -19,7 +19,7 @@
             </ValidationProvider>
           </div>
           <div class="add_Tourist_block">
-            <span>行政區域</span>
+            <span>{{ $t('tArea') }}</span>
 
             <ValidationProvider
               v-slot="{ errors, failed }"
@@ -40,7 +40,7 @@
             </ValidationProvider>
           </div>
           <div class="add_Tourist_block">
-            <span>地址</span>
+            <span>{{ $t('tAddr') }}</span>
 
             <ValidationProvider
               v-slot="{ errors, failed }"
@@ -56,7 +56,7 @@
             </ValidationProvider>
           </div>
           <div class="add_Tourist_block">
-            <span>電話</span>
+            <span>{{ $t('tPhone') }}</span>
             <ValidationProvider
               v-slot="{ errors, failed }"
               class="Provider"
@@ -71,7 +71,7 @@
             </ValidationProvider>
           </div>
 
-          <button @click="addList">新增</button>
+          <button @click="addList">{{ $t('tAdd') }}</button>
         </div>
       </ValidationObserver>
     </div>

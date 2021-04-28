@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="banner">
-      <h1 class="bigtitle">台中景點資訊-Vue</h1>
+      <h1 class="bigtitle">{{ $t('title') }}</h1>
       <select id="sel" name="" :value="value" @change="emitDistrictsZip">
         <option
           v-for="site in districtsCodeArry"

@@ -38,7 +38,7 @@
 
 - [X] ~~*將 component 內的 props 類別宣告方式 ?: 都改成 !:*~~ [2021-04-27]
 
-- [ ] 參考 https://i18n.nuxtjs.org/ 及 https://kazupon.github.io/vue-i18n/ 將專案改成中英模式，並可切換語系
+- [X] ~~*參考 https://i18n.nuxtjs.org/ 及 https://kazupon.github.io/vue-i18n/ 將專案改成中英模式，並可切換語系*~~ [2021-04-28]
 
 - [X] ~~*在專案內新增 .env.example 檔案作為 .env 的範本*~~ [2021-04-27]
 
@@ -55,3 +55,20 @@
 - [X] ~~*代碼整理，並移除不必要的檔案及代碼*~~ [2021-04-27]
 
 - [X] ~~*import component 時名稱使用 "大駝峰式命名法"*~~ [2021-04-27]
+
+
+什麼意思
+{
+        code: 'zw-tw',
+        iso: 'zw-tw22',
+        name: '繁',
+      },
+
+
+錯誤
+.filter((i) => i.code !== this.$i18n.locale)
+
+
+
+
+$tc

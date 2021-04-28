@@ -3,6 +3,18 @@
     <!-- <Vee />測試vee表單驗證 -->
     <!-- <Loading /> 測試loading方法1
      <Loading2 />測試loading方法2 -->
+
+    <div class="nuxtlinka">
+      <nuxt-link
+        v-for="locale in availableLocales"
+        :key="locale.code"
+        :to="switchLocalePath(locale.code)"
+        >{{ locale.name }}</nuxt-link
+      >
+    </div>
+    <div class="nuxtlinka" style="top: 22px">
+      <a href="" @click.prevent="moveAbout">{{ $t('about') }}</a>
+    </div>
     <SelectZip
       v-model="districtsZip"
       :districts-code-arry="districtsCodeArry"
@@ -92,6 +104,11 @@ export default class HelloWorld extends Vue {
     )
   }
 
+  /** 中英文切換 */
+  get availableLocales() {
+    return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale)
+  }
+
   /** 地區名稱轉成encodeURI */
   get code(): string {
     return encodeURI(this.districtsArea)
@@ -107,6 +124,9 @@ export default class HelloWorld extends Vue {
     loader.hide()
   }
 
+  moveAbout() {
+    this.$router.push(this.localePath('/about'))
+  }
   /** 爺孫組件測試 */
   // @ProvideReactive()
   // hago2: string = "5555";
@@ -126,5 +146,19 @@ body {
   font-weight: bold;
   letter-spacing: 2px;
   text-align: center;
+}
+
+.nuxtlinka {
+  display: block;
+  position: absolute;
+  right: 0;
+  color: #fff;
+  font-weight: bold;
+  a {
+    color: #fff;
+    margin-right: 5px;
+    display: inline-block;
+    font-size: 1.125em;
+  }
 }
 </style>

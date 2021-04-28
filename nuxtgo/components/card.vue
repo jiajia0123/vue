@@ -2,8 +2,8 @@
   <div>
     <ValidationObserver ref="form">
       <div class="container">
-        <button @click="error">error</button>
-        <button @click="success">success</button>
+        <button @click="error">{{ $t('error') }}</button>
+        <button @click="success">{{ $t('success') }}</button>
         <div class="row">
           <div v-for="site in value" :key="site.id" class="col-md-6">
             <div class="bigaree">
@@ -70,8 +70,11 @@
                     </ValidationProvider>
                   </li>
                 </ul>
-                <button @click="deleteList(site.id, site.cityname)">
-                  刪除
+                <button
+                  class="loadingArea_btn"
+                  @click="deleteList(site.id, site.cityname)"
+                >
+                  {{ $t('del') }}
                 </button>
                 <!-- loading時如果要設定在部分區域 -->
                 <div
@@ -81,7 +84,7 @@
                 >
                   <!-- loading時如果要設定在部分區域 END -->
                   <button v-if="active !== site.id" @click="patchData(site.id)">
-                    修改
+                    {{ $t('mod') }}
                   </button>
 
                   <button
@@ -96,7 +99,7 @@
                       )
                     "
                   >
-                    更新
+                    {{ $tc('re', 2) }}
                   </button>
                 </div>
               </div>
@@ -265,10 +268,13 @@ export default class Card extends Vue {
   margin-left: 54px;
   display: inline-block;
   button {
-    width: 48px;
+    width: 68px;
     position: relative;
     left: -51px;
   }
+}
+.loadingArea_btn {
+  width: 68px;
 }
 .vld-overlay {
   right: 50px;
