@@ -40,7 +40,7 @@
           >進入原始javascrip版本</a
         >
       </p>
-      <button @click="opengo.bark('123')">子組件的旺旺叫</button>
+      <!-- <button @click="opengo.bark('123')">子組件的旺旺叫</button> ref測試-->
     </div>
 
     <!-- <todo :merr="mey">這是父組件插曹</todo> -->
