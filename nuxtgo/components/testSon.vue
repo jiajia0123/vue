@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, InjectReactive } from 'vue-property-decorator'
+import { Vue, Component, Prop, InjectReactive } from 'nuxt-property-decorator'
 // interface AreaOption {
 //   zip: number
 //   name: string

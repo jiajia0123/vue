@@ -28,7 +28,7 @@
 
     <h2 class="area_title">{{ districtsArea }}</h2>
 
-    <Card v-model="touristDestination" />
+    <Card ref="opengo" v-model="touristDestination" />
 
     <!-- <div >爺孫組件測試<TestFather v-model="districtsZip"/></div> -->
 
@@ -40,6 +40,7 @@
           >進入原始javascrip版本</a
         >
       </p>
+      <button @click="opengo.bark('123')">子組件的旺旺叫</button>
     </div>
 
     <!-- <todo :merr="mey">這是父組件插曹</todo> -->
@@ -47,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue, Watch, Ref } from 'nuxt-property-decorator'
 import { LocaleObject } from 'nuxt-i18n/types'
 import { AreaOption, touristOption } from '~/@types'
 import SelectZip from '~/components/selectZip.vue'
@@ -129,6 +130,8 @@ export default class HelloWorld extends Vue {
   moveAbout() {
     this.$router.push(this.localePath('/about'))
   }
+
+  @Ref() readonly opengo!: Card // Card這個子組件上有一個ref="opengo"
 
   /** 爺孫組件測試 */
   // @ProvideReactive()

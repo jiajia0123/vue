@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 import loadingSvg from '~/components/loadingSvg.vue'
 
 // console.log(window.$nuxt);

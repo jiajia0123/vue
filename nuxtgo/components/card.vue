@@ -112,7 +112,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { touristOption } from '~/@types'
 import LoadingSvg from '~/components/loadingSvg.vue' // loading時如果要設定在部分區域
@@ -177,6 +177,10 @@ export default class Card extends Vue {
       text: `更新成功`,
     })
     loader.hide()
+  }
+
+  bark(val) {
+    alert('旺旺叫' + val)
   }
 
   /** 刪除旅遊景點 */
