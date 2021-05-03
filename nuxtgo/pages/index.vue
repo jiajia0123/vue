@@ -50,6 +50,7 @@
 <script lang="ts">
 import { Component, Vue, Watch, Ref } from 'nuxt-property-decorator'
 import { LocaleObject } from 'nuxt-i18n/types'
+
 import { AreaOption, touristOption } from '~/@types'
 import SelectZip from '~/components/selectZip.vue'
 import AddTourist from '~/components/addTourist.vue'
@@ -58,6 +59,7 @@ import TestFather from '~/components/testFather.vue'
 import Vee from '~/components/vee.vue'
 import Loading from '~/components/loading.vue'
 import Loading2 from '~/components/loading2.vue'
+import 'sweetalert2/src/sweetalert2.scss'
 
 @Component({
   components: {
@@ -129,6 +131,10 @@ export default class HelloWorld extends Vue {
 
   moveAbout() {
     this.$router.push(this.localePath('/about'))
+  }
+
+  mounted() {
+    // this.$swal()
   }
 
   @Ref() readonly opengo!: Card // Card這個子組件上有一個ref="opengo"

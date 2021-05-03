@@ -34,6 +34,7 @@ export default {
     '~/plugins/Notifications',
     '~/plugins/VeeValidate',
     '~/plugins/Loading',
+    '~/plugins/sweetalert',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

@@ -10,11 +10,15 @@ export default (context: Context, inject: Inject) => {
   instance.interceptors.request.use(
     function (config) {
       console.log('攔截器成功')
+      console.log(context.$swal())
 
+      context.$swal()
       return config
     },
     function (error) {
-      console.log('你失敗了')
+      if (error.response.status == 404) {
+        context.$swal()
+      }
 
       return Promise.reject(error)
     }
