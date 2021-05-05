@@ -158,6 +158,7 @@ export default class Card extends Vue {
       return
     }
     const code = encodeURI(cityname)
+    await this.$swal('確定修改嗎?')
     /** API修改該筆資料內容 */
     await this.$api.patch(`/tourist/${idcode}`, {
       名稱: name,
@@ -176,6 +177,7 @@ export default class Card extends Vue {
       type: 'success',
       text: `更新成功`,
     })
+
     loader.hide()
   }
 

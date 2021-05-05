@@ -3,7 +3,46 @@
     <!-- <Vee />測試vee表單驗證 -->
     <!-- <Loading /> 測試loading方法1
      <Loading2 />測試loading方法2 -->
-    <!-- 45454 -->
+    <!--插巢練習START -->
+    <slotGo style="display: none">
+      <!-- 2.動態切換具名插槽 -->
+      <template #[threeOrfour]>
+        <div>XXXXX</div>
+      </template>
+
+      <!-- 3.作用域插槽:子組件的資料往上傳="自訂義名稱" -->
+      <template #two="gosd">
+        <div>第二個父{{ gosd.goto }}</div>
+        <div>第二個父{{ gosd.goto2 }}</div>
+      </template>
+      <!-- 1.具名插槽:v-slot:one，也可以寫成#one -->
+      <!-- 4.解構插槽:子組件的資料往上傳="{解構需要的變數}" -->
+      <template #one="{ goto }">
+        <div>第一個父</div>
+        <div>第一個父 {{ goto }}</div>
+      </template>
+      <br />
+      ---------------
+      <br />
+      {{ msg }}
+    </slotGo>
+    <!--插巢練習END -->
+
+    <multiselect
+      v-model="value"
+      style="margin: 30px; width: 800px"
+      :options="options"
+      :searchable="false"
+      :close-on-select="false"
+      :show-labels="false"
+      placeholder="哈囉趕快選啦"
+      track-by="language"
+      label="name"
+    ></multiselect>
+    <!-- :searchable="false" –禁用搜索功能
+         :close-on-select="false" –選擇選項後，下拉菜單保持打開狀態
+         :show-labels="false" –高亮顯示的選項上沒有標籤 -->
+    {{ value }}
     <div class="nuxtlinka">
       <nuxt-link
         v-for="locale in availableLocales"
@@ -51,6 +90,7 @@
 import { Component, Vue, Watch, Ref } from 'nuxt-property-decorator'
 import { LocaleObject } from 'nuxt-i18n/types'
 
+import multiselect from 'vue-multiselect'
 import { AreaOption, touristOption } from '~/@types'
 import SelectZip from '~/components/selectZip.vue'
 import AddTourist from '~/components/addTourist.vue'
@@ -59,8 +99,8 @@ import TestFather from '~/components/testFather.vue'
 import Vee from '~/components/vee.vue'
 import Loading from '~/components/loading.vue'
 import Loading2 from '~/components/loading2.vue'
+import slotGo from '~/components/slotGo.vue'
 import 'sweetalert2/src/sweetalert2.scss'
-
 @Component({
   components: {
     SelectZip,
@@ -70,6 +110,8 @@ import 'sweetalert2/src/sweetalert2.scss'
     Vee,
     Loading,
     Loading2,
+    slotGo,
+    multiselect,
   },
 
   async asyncData({ $api }) {
@@ -85,6 +127,17 @@ import 'sweetalert2/src/sweetalert2.scss'
   },
 })
 export default class HelloWorld extends Vue {
+  value = null
+  options: object[] = [
+    { name: '大王', language: '中文' },
+    { name: '小花', language: '英文' },
+    { name: '陳明', language: '德文' },
+    { name: '小寮', language: '法文', $isDisabled: true },
+    { name: '王橫', language: '西班牙文' },
+  ]
+
+  threeOrfour: string = 'three'
+  msg: string = '我是父'
   /** 郵遞區號陣列 */
   districtsCodeArry: AreaOption[] = []
 
@@ -133,10 +186,6 @@ export default class HelloWorld extends Vue {
     this.$router.push(this.localePath('/about'))
   }
 
-  mounted() {
-    // this.$swal()
-  }
-
   @Ref() readonly opengo!: Card // Card這個子組件上有一個ref="opengo"
 
   /** 爺孫組件測試 */
@@ -174,3 +223,5 @@ body {
   }
 }
 </style>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

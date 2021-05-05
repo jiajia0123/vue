@@ -146,6 +146,7 @@ export default class AddTourist extends Vue {
     }) // 右下提示視窗
     this.$emit('reloadTouris', response.data)
     loader.hide() // loading解除
+    this.$swal()
   }
 }
 

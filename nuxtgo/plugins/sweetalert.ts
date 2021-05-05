@@ -5,9 +5,14 @@ import { Inject } from '@nuxt/types/app'
 export default (context: Context, inject: Inject) => {
   inject(
     'swal',
-    (title: string, text: string, icon: string, confirmButtonText: string) =>
+    (
+      title: string = '完成',
+      text: string,
+      icon: string,
+      confirmButtonText: string
+    ) =>
       Swal.fire({
-        title: '完成!',
+        title,
         text: '資料更新成功',
         icon: 'success',
         confirmButtonText: '確認',

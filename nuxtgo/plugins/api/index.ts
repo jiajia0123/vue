@@ -9,7 +9,6 @@ export default (context: Context, inject: Inject) => {
   // 此處的instance為我們create的實體
   instance.interceptors.request.use(
     function (config) {
-      context.$swal()
       return config
     },
     function (error) {
