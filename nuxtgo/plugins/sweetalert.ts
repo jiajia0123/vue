@@ -7,11 +7,10 @@ export default (context: Context, inject: Inject) => {
     'swal',
     (title: string, text: string, icon: string, confirmButtonText: string) =>
       Swal.fire({
-        title: 'Error!',
-        text: 'Do you want to continue',
-        icon: 'error',
-        confirmButtonText: 'Cool',
+        title: '完成!',
+        text: '資料更新成功',
+        icon: 'success',
+        confirmButtonText: '確認',
       })
   )
 }
-
