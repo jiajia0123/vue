@@ -3,7 +3,7 @@
     <!-- <Vee />測試vee表單驗證 -->
     <!-- <Loading /> 測試loading方法1
      <Loading2 />測試loading方法2 -->
-
+    <!-- 45454 -->
     <div class="nuxtlinka">
       <nuxt-link
         v-for="locale in availableLocales"
