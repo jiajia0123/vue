@@ -114,6 +114,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { touristOption } from '~/@types'
 import LoadingSvg from '~/components/loadingSvg.vue' // loading時如果要設定在部分區域
 @Component({
@@ -158,24 +159,37 @@ export default class Card extends Vue {
       return
     }
     const code = encodeURI(cityname)
-    await this.$swal('確定修改嗎?')
-    /** API修改該筆資料內容 */
-    await this.$api.patch(`/tourist/${idcode}`, {
-      名稱: name,
-      地址: address,
-      電話: phone,
+    const result = await Swal.fire({
+      title: '確定更新?',
+      text: '',
+      icon: 'question',
+      showDenyButton: true,
+      confirmButtonText: `確定`,
+      denyButtonText: `先不要`,
     })
+    if (result.isConfirmed) {
+      Swal.fire('更新成功!', '', 'success')
+      /** API修改該筆資料內容 */
+      await this.$api.patch(`/tourist/${idcode}`, {
+        名稱: name,
+        地址: address,
+        電話: phone,
+      })
+      this.$notify({
+        group: 'success',
+        type: 'success',
+        text: `更新成功`,
+      })
+    } else if (result.isDenied) {
+      Swal.fire('取消更新!', '', 'info')
+    }
+
     /** API更新當前頁面內容 */
     const response = await this.$api.get(`/tourist?cityname=${code}`)
     this.$emit('input', response.data)
     this.active = ''
     this.$nextTick(() => {
       this.$refs.form.reset()
-    })
-    this.$notify({
-      group: 'success',
-      type: 'success',
-      text: `更新成功`,
     })
 
     loader.hide()

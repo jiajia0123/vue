@@ -15,7 +15,10 @@ export default (context: Context, inject: Inject) => {
         title,
         text: '資料更新成功',
         icon: 'success',
-        confirmButtonText: '確認',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: `確認`,
+        denyButtonText: `Don't save`,
       })
   )
 }

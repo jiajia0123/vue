@@ -4,6 +4,8 @@
     <!-- <Loading /> 測試loading方法1
      <Loading2 />測試loading方法2 -->
     <!--插巢練習START -->
+    {{ godata }}
+    <inputText :data="godata" />
     <slotGo style="display: none">
       <!-- 2.動態切換具名插槽 -->
       <template #[threeOrfour]>
@@ -32,17 +34,32 @@
       v-model="value"
       style="margin: 30px; width: 800px"
       :options="options"
-      :searchable="false"
-      :close-on-select="false"
-      :show-labels="false"
       placeholder="哈囉趕快選啦"
       track-by="language"
       label="name"
+      :searchable="true"
+      :close-on-select="true"
+      :show-labels="false"
+      :allow-empty="false"
+      :custom-label="xxx"
+      deselect-label="不能移除"
+      :multiple="true"
+      :internal-search="false"
+      @search-change="goha"
     ></multiselect>
-    <!-- :searchable="false" –禁用搜索功能
-         :close-on-select="false" –選擇選項後，下拉菜單保持打開狀態
-         :show-labels="false" –高亮顯示的選項上沒有標籤 -->
     {{ value }}
+    <!-- track-by="language" 應該是key唯一值
+          label="name"顯示在選單中的名稱(name是:options裡面的陣列的某個key值)
+          :searchable="false" –禁用搜索功能
+          :close-on-select="false" –選擇選項後，下拉菜單保持打開狀態
+          :show-labels="false" –高亮顯示的選項上沒有標籤
+          :allow-empty="false"允許空值
+          :custom-label="xxx"，名稱用function，return一個新的標籤
+         :multiple="true"複選
+          :internal-search="false"複選的時候點選可以關掉它
+         @search-change="goha" 輸入內容觸發的動作
+         -->
+
     <div class="nuxtlinka">
       <nuxt-link
         v-for="locale in availableLocales"
@@ -100,6 +117,7 @@ import Vee from '~/components/vee.vue'
 import Loading from '~/components/loading.vue'
 import Loading2 from '~/components/loading2.vue'
 import slotGo from '~/components/slotGo.vue'
+import inputText from '~/components/inputText.vue'
 import 'sweetalert2/src/sweetalert2.scss'
 @Component({
   components: {
@@ -112,6 +130,7 @@ import 'sweetalert2/src/sweetalert2.scss'
     Loading2,
     slotGo,
     multiselect,
+    inputText,
   },
 
   async asyncData({ $api }) {
@@ -127,6 +146,18 @@ import 'sweetalert2/src/sweetalert2.scss'
   },
 })
 export default class HelloWorld extends Vue {
+  godata = '123'
+  goha() {
+    alert('不簡單!')
+  }
+
+  xxx({ name, language }) {
+    if (name === '大王') {
+      return '大王會中文是真的嗎'
+    }
+    return `${name}會[${language}]`
+  }
+
   value = null
   options: object[] = [
     { name: '大王', language: '中文' },

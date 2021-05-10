@@ -81,8 +81,8 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'nuxt-property-decorator'
 import { ValidationProvider, ValidationObserver } from 'vee-validate' // 驗證規則
-import { AreaOption } from '~/@types'
 
+import { AreaOption } from '~/@types'
 @Component({
   components: {
     ValidationProvider,
@@ -146,7 +146,6 @@ export default class AddTourist extends Vue {
     }) // 右下提示視窗
     this.$emit('reloadTouris', response.data)
     loader.hide() // loading解除
-    this.$swal()
   }
 }
 
