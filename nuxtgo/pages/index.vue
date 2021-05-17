@@ -1,11 +1,12 @@
 <template>
   <div id="app">
+    <Toe />
+    <!-- <Zip />重複組件練習 -->
     <!-- <Vee />測試vee表單驗證 -->
     <!-- <Loading /> 測試loading方法1
      <Loading2 />測試loading方法2 -->
     <!--插巢練習START -->
-    {{ godata }}
-    <inputText :data="godata" />
+
     <slotGo style="display: none">
       <!-- 2.動態切換具名插槽 -->
       <template #[threeOrfour]>
@@ -117,7 +118,8 @@ import Vee from '~/components/vee.vue'
 import Loading from '~/components/loading.vue'
 import Loading2 from '~/components/loading2.vue'
 import slotGo from '~/components/slotGo.vue'
-import inputText from '~/components/inputText.vue'
+import Zip from '~/components/zip.vue'
+import Toe from '~/components/toe.vue'
 import 'sweetalert2/src/sweetalert2.scss'
 @Component({
   components: {
@@ -130,7 +132,8 @@ import 'sweetalert2/src/sweetalert2.scss'
     Loading2,
     slotGo,
     multiselect,
-    inputText,
+    Zip,
+    Toe,
   },
 
   async asyncData({ $api }) {
@@ -146,7 +149,6 @@ import 'sweetalert2/src/sweetalert2.scss'
   },
 })
 export default class HelloWorld extends Vue {
-  godata = '123'
   goha() {
     alert('不簡單!')
   }
