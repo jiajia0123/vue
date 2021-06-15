@@ -5,6 +5,7 @@
     <slot name="three">預設3</slot>
     <slot name="four">預設4</slot>
     <slot></slot>
+    <slot></slot>
     <p>{{ msg }}</p>
     <p>outgo1</p>
   </div>

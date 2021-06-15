@@ -5,10 +5,18 @@
     <!-- <Vee />測試vee表單驗證 -->
     <!-- <Loading /> 測試loading方法1
      <Loading2 />測試loading方法2 -->
+    <div>
+      爺孫組件測試<TestFather
+        v-model="districtsZip"
+        :msg="msg"
+        :three-orfour="threeOrfour"
+      />
+    </div>
     <!--插巢練習START -->
 
-    <slotGo style="display: none">
-      <!-- 2.動態切換具名插槽 -->
+    <slotGo style="display: block">
+      <!-- 真正著順序是由slot由上而下排列，而非這裡的template的順序-->
+      <!-- 2.動態切換具名插槽  //threeOrfour: string = 'three' //改four就是four-->
       <template #[threeOrfour]>
         <div>XXXXX</div>
       </template>
@@ -27,8 +35,11 @@
       <br />
       ---------------
       <br />
-      {{ msg }}
+      {{
+        msg
+      }}--一般組件內是不寫東西的，除非裡面有slot，所以現在這裡的東西都會跑到不具名插巢
     </slotGo>
+
     <!--插巢練習END -->
 
     <multiselect
@@ -86,8 +97,6 @@
     <h2 class="area_title">{{ districtsArea }}</h2>
 
     <Card ref="opengo" v-model="touristDestination" />
-
-    <!-- <div >爺孫組件測試<TestFather v-model="districtsZip"/></div> -->
 
     <div class="footer">
       <p>由原始javascrip版本改成Vue框架、axios使用</p>
@@ -224,6 +233,10 @@ export default class HelloWorld extends Vue {
   /** 爺孫組件測試 */
   // @ProvideReactive()
   // hago2: string = "5555";
+
+  mounted() {
+    this.$hello('123')
+  }
 }
 </script>
 

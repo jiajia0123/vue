@@ -1,7 +1,7 @@
 <template>
   <div>
     <input type="text" :value="value" @keyup.enter="gopre" /> -->
-    {{ hago2 }}InjectReactive
+    {{ hago2 }}InjectReactive--- {{ value }}孫元件
   </div>
 </template>
 
